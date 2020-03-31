@@ -1,0 +1,20 @@
+@import '../../../assets/scss/abstract/mixins';
+@import '../../../assets/scss/abstract/variables';
+
+.background-modal {
+    display: block;
+    overflow: auto;
+    @include modal-container();
+
+    .container {
+        z-index: 3;
+        position: relative;
+        min-height: calc(100% - (40px));
+        margin: 20px auto;
+
+        &__modal {
+            width: 100%;
+            background: $color-background;
+        }
+    }
+}

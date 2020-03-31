@@ -1,0 +1,18 @@
+<section class="m-t-50 container-no-content">
+  <div class="container-no-content__group text-align-center">
+    <div class="grid-lg-12 m-b-28 container-no-content__group--title">
+      <p class="container-no-content__group--title__element">
+        {{noContentConfig.text}}
+      </p>
+    </div>
+    <div class="grid-lg-12 m-b-28">
+      <img *ngIf="noContentConfig.showImageNotFound" src="../../../assets/images/pathology/icon_lupanotfound.png">
+      <img *ngIf="noContentConfig.showImageFolder" src="../../../assets/images/pathology/icone_pasta_vazia.png">
+    </div>
+    <div *ngIf="noContentConfig.info" class="grid-lg-12 m-b-28 container-no-content__group--title">
+      <p class="container-no-content__group--title__element">
+        {{noContentConfig.info}}
+      </p>
+    </div>
+  </div>
+</section>

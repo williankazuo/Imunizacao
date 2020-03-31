@@ -1,0 +1,19 @@
+<div class="container-alert shadow" *ngIf="open">
+  <div class="grid-lg-12 text-align-center container-alert__group--content">
+    <img src="../../../assets/images/input/Cancelar.png"
+      class="container-alert__group--content__elements--close pointer" (click)="closeModal();">
+
+    <p class="title-info f-s-24">{{modalConfig.title}}</p>
+
+    <p class="m-t-10 text-title-info">{{modalConfig.text}}</p>
+
+    <hr class="m-t-15 container-alert__group--content__elements--hr">
+
+    <div class="m-t-15 d-flex justify-content-center container-alert__group--content__elements--buttons">
+      <button class="btn btn--add" (click)="buttonAction()">{{modalConfig.button}}</button>
+    </div>
+  </div>
+</div>
+
+<div class="container-outside" *ngIf="open">
+</div>

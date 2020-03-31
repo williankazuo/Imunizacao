@@ -1,0 +1,182 @@
+@import './variables';
+/* #region ####################### MIXIN DE BREAKPOINTS Maximos ####################### */
+
+// Pequenos dispositivos
+@mixin sm-max {
+  @media (max-width: #{$screen-sm-min}) {
+    @content;
+  }
+}
+
+// Dispositivos médios
+@mixin md-max {
+  @media (max-width: #{$screen-md-min}) {
+    @content;
+  }
+}
+
+// Grandes dispositivos
+@mixin lg-max {
+  @media (max-width: #{$screen-lg-min}) {
+    @content;
+  }
+}
+
+// Dispositivos extra grandes
+@mixin xl-max {
+  @media (max-width: #{$screen-xl-min}) {
+    @content;
+  }
+}
+
+// Dispositivos personalizados
+@mixin rwd-max($screen) {
+  @media (max-width: $screen + "px") {
+    @content;
+  }
+}
+
+/* #endregion */
+/* #region ####################### MIXIN DE BREAKPOINTS MINIMOS ####################### */
+
+// Pequenos dispositivos
+@mixin sm-min {
+  @media (min-width: #{$screen-sm-min}) {
+    @content;
+  }
+}
+
+// Dispositivos médios
+@mixin md-min {
+  @media (min-width: #{$screen-md-min}) {
+    @content;
+  }
+}
+
+// Grandes dispositivos
+@mixin lg-min {
+  @media (min-width: #{$screen-lg-min}) {
+    @content;
+  }
+}
+
+// Dispositivos extra grandes
+@mixin xl-min {
+  @media (min-width: #{$screen-xl-min}) {
+    @content;
+  }
+}
+
+// Dispositivos personalizados
+@mixin rwd-min($screen) {
+  @media (min-width: $screen + "px") {
+    @content;
+  }
+}
+
+/* #endregion */
+
+/* #region ####################### MIXIN UTEIS ################################ */
+
+/* Mixin para realizar a centralização vertical, horizontal ou as duas formas, para elementos que não são flex */
+@mixin align($vertical: true, $horizontal: false, $position: relative) {
+  @if $position {
+    position: $position;
+  }
+
+  @if $vertical {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  @if $horizontal {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  @if ($vertical and $horizontal) {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Mixin para definir a orientação do bloco que agrupa elementos */
+@mixin orientation($pos: absolute, $display: block, $content: "") {
+  content: $content;
+  display: $display;
+  position: $pos;
+}
+
+/* Mixin para adicionar reticencias em textos */
+@mixin ellipse($truncation-boundary) {
+  max-width: $truncation-boundary;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mixin para formatação de botões. define tamanho, cor de texto e cor de fundo */
+@mixin buttonCustom($primary, $secundary, $lenght: '') {
+  @if($lenght !='') {
+    width: $lenght;
+  }
+
+  background: $primary;
+  color: $secundary;
+
+  /* &:hover { } */
+}
+
+/* Mixin para formatação de textos, sendo a font que será usada, o tamanho e cor */
+@mixin textCustom($font-family, $font-size, $color, $bold: false) {
+  font-family: $font-family;
+  font-size: $font-size;
+  color: $color;
+
+  @if($bold) {
+    font-weight: 600;
+  }
+}
+
+@mixin textFormater($margin-top: 0px, $font-family: #{$font-family-lato}, $font-size: 14px, $color: #{$color-gray}, $bold: false) {
+  margin-top: $margin-top;
+  @include textCustom($font-family, $font-size, $color, $bold);
+}
+
+/* Mixin para criar bordar abaixo de textos */
+@mixin hr($color, $width: 1px) {
+  border-bottom: $width solid $color;
+}
+
+/* Mixin para imagens de background */
+@mixin backgroundImageFull($url) {
+  height: 100%;
+  background-image: url($url);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+/* Mixin para formatação dos campos de imputs */
+@mixin input-text($width, $marginTop: 0, $height: 30px, $background: white) {
+  width: $width;
+  height: $height;
+  display: block;
+  background: $background;
+  padding: 7px 0px 6px 10px;
+  border: 1px solid $color-gray;
+  @include textFormater($marginTop, $font-family-lato, 14px, $color-dark-gray, false);
+}
+
+@mixin modal-container() {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+  position: fixed;
+  background-color: $color-white-background;
+}
+
+/* #endregion */

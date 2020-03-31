@@ -1,0 +1,60 @@
+/* 
+    Arquivo para formatação dos acordions (blocos que agrupa conteudos e formulários) do sistema
+*/
+
+// classes usadas para o topo azul claro do painel
+.painel-header-accordion {
+    width: 100%;
+    height: 45px;
+    background: $color-blue;
+    padding-left: 20px;
+    padding-right: 30px;
+    text-transform: capitalize;
+    position: relative;
+
+    &__title {
+        @include textCustom($font-family-lato, 16px, $color-white);
+        @include ellipse(100%);
+    }
+
+    .three-dot-menu {
+        position: absolute;
+        top: 12px;
+        right: 5px;
+    }
+
+    &__close {
+        position: absolute;
+        cursor: pointer;
+        right: 15px;
+    }
+}
+
+// classes responsavel por definir as propriedades do container do acordion, 
+// sendo elas os espaçamentos externos e cor de fundo
+.painel-accordion {
+    background: $color-background;
+    padding-bottom: 40px;
+    padding: 10px 20px;
+    display: inline-block;
+
+    &:last-child {
+        padding-bottom: 30px;
+    }
+
+    &__data {
+        &__element {
+            position: relative;
+            padding-right: 30px;
+
+            .text-category-info {
+                margin: 0 0 10px 0;
+                @include ellipse(100%);
+            }
+        }
+    }
+}
+
+.shadow {
+    box-shadow: 0px 3px 5px 3px rgba(0, 0, 0, 0.10);
+}

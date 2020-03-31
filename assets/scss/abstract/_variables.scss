@@ -1,0 +1,54 @@
+/* 
+    Arquivo contendo todos os VALORES COMUM DO SISTEMAS em forma de variavei para
+    ser usadas em todos os demais arquivos SCSS
+*/
+
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i");
+
+/* #region ############################ VARIAVEIS DE BREAKPOINTS ############################ */
+
+/* Pequenos tablets e grandes smartphones (vista de paisagem) */
+$screen-sm-min: 576px;
+
+/* Pequenos tablets (vista de retrato) */
+$screen-md-min: 768px;
+
+/* Tablets e pequenos desktops */
+$screen-lg-min: 992px;
+
+/* tablets grandes e desktops */
+$screen-xl-min: 1200px;
+
+/* #endregion */
+
+/* #region ############################ ARRAY DE CORES ###################################### */
+$color-white: #FFFFFF;
+$color-blue: #2196F3;
+$color-blue-bold: #005A9C;
+$color-dark-gray: #707070;
+$color-gray: #D5D5D5;
+$color-green: #C4E6B2;
+$color-red: #FF0000;
+$color-background: #F5F5F5;
+$color-white-transparent: rgba(255, 255, 255, 0.05);
+$color-white-background: rgba(0, 0, 0, 0.4);
+$color-placeholder: #9E9E9E;
+$color-hover: rgba(0, 0, 0, 0.217);
+$color-input-disabled: #FAFAFB; 
+/* #endregion */
+
+/* #region ############################ FONT ############################################## */
+
+$font-family-nunito: 'Nunito',
+sans-serif;
+$font-family-lato: 'Lato',
+sans-serif;
+
+/* #endregion */
+
+/* #region ############################ GRID ############################################## */
+
+$grid-gutter: 1%;
+$grid-columns: 12;
+
+/* #endregion */

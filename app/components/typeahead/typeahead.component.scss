@@ -1,0 +1,19 @@
+@import '../../../assets/scss/abstract/mixins';
+@import '../../../assets/scss/abstract/variables';
+
+.typeahead-container {
+    width: 100%;
+    @include orientation(relative, block);
+
+    .form-group-field {
+
+        .typeahead {
+            @include orientation(relative);
+        }
+
+    }
+}
+
+.hover {
+    background: $color-hover;
+}

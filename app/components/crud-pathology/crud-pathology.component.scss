@@ -1,0 +1,20 @@
+@import '../../../assets/scss/abstract/mixins';
+
+.container-crud-pathology {
+  .painel-accordion {
+
+    &__form {
+      display: block;
+      height: max-content;
+
+      .form-group-field {
+        padding-right: 60px;
+
+        @include rwd-max(767) {
+          padding-right: 0px;
+        }
+      }
+
+    }
+  }
+}

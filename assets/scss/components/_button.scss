@@ -1,0 +1,49 @@
+/* 
+    Arquivo para formatação de botões do sistema
+*/
+
+.container-button-flex {
+    width: 100% !important;
+    max-width: max-content;
+}
+
+.container__group--nav__buttons {
+  min-width: 150px;
+}
+
+.btn {
+    /* transition-duration: .3s; */
+    border: 2px solid $color-blue-bold;
+    border-radius: 50px;
+    background: initial;
+    cursor: pointer;
+    font-size: 14px;
+    height: 35px;
+
+    width: 100%;
+    max-width: 150px;
+
+    outline: 0;
+
+    &--default {
+        height: 40px;
+        max-width: 100%;
+        @include buttonCustom($color-blue-bold, $color-white, 334px);
+    }
+
+    &--add {
+        @include buttonCustom($color-blue-bold, $color-white);
+    }
+
+    &--edit {
+        @include buttonCustom($color-blue-bold, $color-white);
+    }
+
+    &--back {
+        @include buttonCustom($color-white, $color-blue-bold);
+    }
+
+    &--delete {
+        @include buttonCustom($color-white, $color-white);
+    }
+}

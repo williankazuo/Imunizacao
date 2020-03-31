@@ -1,0 +1,26 @@
+<section *ngIf="!response; else finalization" class="container m-t-30">
+  <div class="d-flex justify-content-space-between grid-lg-12 container__group--nav">
+    <p class="title-info f-s-24">Editar Patologia</p>
+    <div class="container__group--nav__buttons">
+      <button class="btn btn--back" [routerLink]="['/lista-patologias']">Cancelar</button>
+    </div>
+  </div>
+  <div class="m-t-50">
+    <app-crud-pathology [editPathology]="true" [pathology]="pathologyScheme" (valid)="receivePathologyValidation($event);">
+    </app-crud-pathology>
+  </div>
+  <div class="m-t-50">
+    <app-crud-vaccination-schedule *ngIf="pathologyScheme?.schemes.length > 0" [schemes]="pathologyScheme.schemes"
+      [calendarType]="pathologyScheme.pathologyCalendarType" [errorScheme]="errorScheme" [backupDoses]="backupDoses"
+      (valid)="receiveSchemeValidation($event);">
+    </app-crud-vaccination-schedule>
+  </div>
+
+  <div class="m-t-30 text-align-right">
+    <button class="btn btn--add" (click)="savePathology();">Salvar</button>
+  </div>
+</section>
+
+<ng-template #finalization>
+  <app-finalization [options]="options"></app-finalization>
+</ng-template>

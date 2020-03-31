@@ -1,0 +1,631 @@
+<div class="container-crud-vaccination">
+  <div class="d-flex align-center painel-header-accordion">
+    <p class="painel-header-accordion__title">Esquema de vacinação</p>
+  </div>
+
+  <div class="grid-lg-12 painel-accordion">
+    <div class="border-blue m-b-30" *ngFor="let scheme of schemes; let schemeIndex = index;">
+      <div class="border-blue p-b-12 grid-lg-12 d-flex justify-content-space-between align-center">
+        <p class="sub-title ">ESQUEMA {{schemeIndex+1}}</p>
+        <p class="pointer text-link" (click)="deleteScheme(schemeIndex, scheme.id);" *ngIf="schemes.length>1">Excluir
+          esquema</p>
+      </div>
+      <div class="painel-accordion__form">
+        <div class="grid-md-6 grid-lg-4 form-group-field">
+          <label class="form-group-field--label category-info" for="name-vaccine"
+            id="vaccineIds{{schemeIndex}}">Vacinas</label>
+          <div class="form-group-field--group" *ngFor="let vaccine of scheme.vaccines; let vaccineIndex = index">
+            <app-typeahead [idInput]="'name-vaccine' + vaccineIndex" [idBox]="'name-vaccine' + vaccineIndex"
+              [placeholder]="'Pesquise por nome de vacina...'" [listElements]="listVaccine" [searchValue]="vaccine.name"
+              [blockInput]="vaccine.blockVaccine" [error]="vaccine.errorMsg" [requiredField]="true"
+              [activeError]="errorScheme[schemeIndex]?.vaccineIds.length > 0 && errorScheme[schemeIndex]?.vaccineIds[vaccineIndex]"
+              (returnValue)="selectVaccine($event, scheme, vaccineIndex)">
+            </app-typeahead>
+            <img *ngIf="vaccine.name.length > 1 || scheme.vaccines.length > 1"
+              src="../../../assets/images/input/Cancelar.png" (click)="removeVaccine(scheme, vaccineIndex)">
+
+            <app-modal-register-vaccine [showModal]="showVaccineModal[vaccineIndex]" [vaccineSelected]="vaccineSelected"
+              (receiveResponse)="receiveVaccineClose($event, scheme, vaccineIndex)">
+            </app-modal-register-vaccine>
+          </div>
+          <div class="form-group-field--add-new-field" (click)="newVaccineField(scheme); validAddVaccineField(scheme)"
+            [ngClass]="!scheme.addNewVaccine ? 'form-group-field--add-new-field--blocked' :  ''">+ Adicionar
+            vacinas</div>
+        </div>
+
+        <div class="grid-md-6 grid-lg-4 form-group-field" id="gender{{schemeIndex}}">
+          <label class="form-group-field--label category-info">Aplicável a pessoas do sexo</label>
+
+          <label class="m-t-20 form-group-field--label-check text-category-info">Feminino
+            <input class="form-group-field--label-check--input" type="radio" [value]="genderEnum.Feminino"
+              name="gender{{schemeIndex}}" [(ngModel)]="scheme.gender">
+            <div class="form-group-field--label-check--circle"
+              [ngClass]="errorScheme[schemeIndex]?.gender == true && !scheme.gender? 'form-group-field--label-check--circle-error' : ''">
+              <span class="check"></span>
+            </div>
+          </label>
+
+          <label class="m-t-20 form-group-field--label-check text-category-info">Masculino
+            <input class="form-group-field--label-check--input" type="radio" [value]="genderEnum.Masculino"
+              name="gender{{schemeIndex}}" [(ngModel)]="scheme.gender">
+            <div class="form-group-field--label-check--circle"
+              [ngClass]="errorScheme[schemeIndex]?.gender == true && !scheme.gender? 'form-group-field--label-check--circle-error' : ''">
+              <span class="check"></span>
+            </div>
+          </label>
+
+          <label class="m-t-20 form-group-field--label-check text-category-info">Ambos
+            <input class="form-group-field--label-check--input" type="radio" [value]="genderEnum.Ambos"
+              name="gender{{schemeIndex}}" [(ngModel)]="scheme.gender">
+            <div class="form-group-field--label-check--circle"
+              [ngClass]="errorScheme[schemeIndex]?.gender == true && !scheme.gender? 'form-group-field--label-check--circle-error' : ''">
+              <span class="check"></span>
+            </div>
+          </label>
+
+        </div>
+        <div class="grid-md-6 grid-lg-4 form-group-field p-r-38" *ngIf="_calendarType == calendarTypeEnum.Adulto"
+          id="isNotRequiredIfPreviouslyTaken{{schemeIndex}}">
+
+          <label class="form-group-field--label category-info">Esquema necessário
+            caso já tenha sido imunizado
+            anteriormente?</label>
+
+          <label class="m-t-20 form-group-field--label-check text-category-info">Sim
+            <input class="form-group-field--label-check--input" type="radio" [value]="true"
+              name="necessary{{schemeIndex}}" [(ngModel)]="scheme.isNotRequiredIfPreviouslyTaken">
+            <div class="form-group-field--label-check--circle"
+              [ngClass]="errorScheme[schemeIndex]?.isNotRequiredIfPreviouslyTaken == true && scheme.isNotRequiredIfPreviouslyTaken == null ? 'form-group-field--label-check--circle-error' : ''">
+              <span class="check"></span>
+            </div>
+          </label>
+
+          <label class="m-t-20 form-group-field--label-check text-category-info">Não
+            <input class="form-group-field--label-check--input" type="radio" [value]="false"
+              name="necessary{{schemeIndex}}" [(ngModel)]="scheme.isNotRequiredIfPreviouslyTaken">
+            <div class="form-group-field--label-check--circle"
+              [ngClass]="errorScheme[schemeIndex]?.isNotRequiredIfPreviouslyTaken == true && scheme.isNotRequiredIfPreviouslyTaken == null ? 'form-group-field--label-check--circle-error' : ''">
+              <span class="check"></span>
+            </div>
+          </label>
+
+        </div>
+
+      </div>
+
+      <div class="m-t-30 painel-accordion__form">
+        <div class="grid-md-6 grid-lg-4 form-group-field">
+          <label class="form-group-field--label category-info">Idade de calendário (apenas
+            números)</label>
+          <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-r-10">
+            <input id="months{{schemeIndex}}" class="form-group-field--group__input" type="number"
+              [(ngModel)]="scheme.months" (keyup)="validateAge(scheme.years, schemeIndex, 'invalidYear')" monthValidator
+              onlyNumber>
+            <label for="months{{schemeIndex}}" class="form-group-field--group__placeholder"
+              [ngClass]="checkValue(scheme.months) ? 'form-group-field--group__placeholderSelected' : ''">Meses</label>
+            <p class="text-title-error"
+              *ngIf="errorScheme[schemeIndex]?.months && scheme.months == null && scheme.years == null">Campo
+              obrigatório</p>
+          </div>
+
+          <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-l-10">
+            <input id="years{{schemeIndex}}" class="form-group-field--group__input" type="number"
+              [(ngModel)]="scheme.years" (keyup)="validateAge(scheme.years, schemeIndex, 'invalidYear')" onlyNumber>
+            <label for="years{{schemeIndex}}" class="form-group-field--group__placeholder"
+              [ngClass]="checkValue(scheme.years) ? 'form-group-field--group__placeholderSelected' : ''">Anos</label>
+            <p class="text-title-error"
+              *ngIf="errorScheme[schemeIndex]?.years && scheme.years == null && scheme.months == null">Campo
+              obrigatório</p>
+            <p id="invalidYear{{schemeIndex}}" class="text-title-error"
+              *ngIf="(scheme.years || (_calendarType === calendarTypeEnum.Adulto && scheme.months !== null)) && errorScheme[schemeIndex]?.invalidYear">
+              Idade do
+              Calendário
+              {{_calendarType}} deve ser {{_calendarType === calendarTypeEnum.Adulto ? 'maior que 18' : 'menor que 19'}}
+            </p>
+          </div>
+        </div>
+
+        <div class="grid-md-6 grid-lg-4 form-group-field">
+          <label class="form-group-field--label category-info" id="invalidMinimumAge{{schemeIndex}}">Idade mínima
+            (apenas
+            números)</label>
+          <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-r-10">
+            <input id="minimumMonthAge{{schemeIndex}}" class="form-group-field--group__input" type="number"
+              [(ngModel)]="scheme.minimumMonthAge" (keyup)="validateAge(scheme.minimumYearAge,
+              schemeIndex, 'invalidMinimumYearAge' )" monthValidator onlyNumber>
+            <label for="minimumMonthAge{{schemeIndex}}" class="form-group-field--group__placeholder"
+              [ngClass]="checkValue(scheme.minimumMonthAge) ? 'form-group-field--group__placeholderSelected' : ''">Meses</label>
+            <p class="text-title-error"
+              *ngIf="errorScheme[schemeIndex]?.minimumMonthAge && scheme.minimumMonthAge == null && scheme.minimumYearAge == null">
+              Campo obrigatório
+            </p>
+          </div>
+
+          <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-l-10">
+            <input id="minimumYearAge{{schemeIndex}}" class="form-group-field--group__input" type="number"
+              [(ngModel)]="scheme.minimumYearAge"
+              (keyup)="validateAge(scheme.minimumYearAge, schemeIndex, 'invalidMinimumYearAge')" onlyNumber>
+            <label for="minimumYearAge{{schemeIndex}}" class="form-group-field--group__placeholder"
+              [ngClass]="checkValue(scheme.minimumYearAge) ? 'form-group-field--group__placeholderSelected' : ''">Anos</label>
+            <p class="text-title-error"
+              *ngIf="errorScheme[schemeIndex]?.minimumYearAge && scheme.minimumYearAge == null && scheme.minimumMonthAge == null">
+              Campo obrigatório</p>
+            <p id="invalidMinimumYearAge{{schemeIndex}}" class="text-title-error"
+              *ngIf="(scheme.minimumYearAge || (_calendarType === calendarTypeEnum.Adulto && scheme.minimumMonthAge !== null)) && errorScheme[schemeIndex]?.invalidMinimumYearAge">
+              Idade do Calendário
+              {{_calendarType}} deve ser
+              {{_calendarType === calendarTypeEnum.Adulto ? 'maior que 18' : 'menor que 19'}}.
+            </p>
+          </div>
+
+          <p *ngIf="errorScheme[schemeIndex].invalidMinimumAge" class="text-title-error">
+            {{errorMessageMinimumAgeAndMaximumConflicting}}
+          </p>
+
+        </div>
+
+        <div class="grid-md-6 grid-lg-4 form-group-field">
+          <label id="invalidMaximumAge{{schemeIndex}}"class="form-group-field--label category-info">Idade máxima (apenas
+            números)</label>
+          <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-r-10">
+            <input id="maximumMonthAge{{schemeIndex}}" class="form-group-field--group__input" type="number"
+              [(ngModel)]="scheme.maximumMonthAge"
+              (keyup)="validateAge(scheme.maximumYearAge, schemeIndex, 'invalidMaximumYearAge')" monthValidator
+              onlyNumber>
+            <label for="maximumMonthAge{{schemeIndex}}" class="form-group-field--group__placeholder"
+              [ngClass]="checkValue(scheme.maximumMonthAge) ? 'form-group-field--group__placeholderSelected' : ''">Meses</label>
+            <p class="text-title-error"
+              *ngIf="errorScheme[schemeIndex]?.maximumMonthAge && scheme.maximumMonthAge == null && scheme.maximumYearAge == null">
+              Campo obrigatório</p>
+          </div>
+
+          <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-l-10">
+            <input id="maximumYearAge{{schemeIndex}}" class="form-group-field--group__input" type="number"
+              [(ngModel)]="scheme.maximumYearAge"
+              (keyup)="validateAge(scheme.maximumYearAge, schemeIndex, 'invalidMaximumYearAge')" onlyNumber>
+            <label for="maximumYearAge{{schemeIndex}}" class="form-group-field--group__placeholder"
+              [ngClass]="checkValue(scheme.maximumYearAge) ? 'form-group-field--group__placeholderSelected' : ''">Anos</label>
+            <p class="text-title-error"
+              *ngIf="errorScheme[schemeIndex]?.maximumYearAge && scheme.maximumYearAge == null && scheme.maximumMonthAge == null">
+              Campo obrigatório</p>
+            <p id="invalidMaximumYearAge{{schemeIndex}}" class="text-title-error"
+              *ngIf="(scheme.maximumYearAge || (_calendarType === calendarTypeEnum.Adulto && scheme.maximumMonthAge !== null)) && errorScheme[schemeIndex]?.invalidMaximumYearAge">
+              Idade do Calendário
+              {{_calendarType}} deve ser {{_calendarType === calendarTypeEnum.Adulto ? 'maior que 18' : 'menor que 19'}}
+            </p>
+          </div>
+
+          <p *ngIf="errorScheme[schemeIndex].invalidMaximumAge" class="text-title-error">
+            {{errorMessageMinimumAgeAndMaximumConflicting}}
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="m-t-50 painel-accordion__form">
+        <p class="sub-title">ESQUEMA PRIMÁRIO</p>
+        <div class="m-b-20 form-group-field" id="doseNumberPrimary{{schemeIndex}}">
+          <label class="form-group-field--label category-info">Quantidade de doses do esquema
+            primário
+          </label>
+
+          <label class="m-t-20 form-group-field--label-check text-category-info"
+            *ngFor="let nDose of numberDoses">{{nDose}}
+            <input class="form-group-field--label-check--input" type="radio" [value]="nDose"
+              name="primary-dose{{schemeIndex}}" [(ngModel)]="scheme.doseNumberPrimary"
+              (click)="selectDoseNumber(nDose, scheme, doseEnum.Primaria)">
+            <div class="form-group-field--label-check--circle"
+              [ngClass]="errorScheme[schemeIndex]?.doseNumberPrimary == true && scheme.doseNumberPrimary == null ? 'form-group-field--label-check--circle-error' : ''">
+              <span class="check"></span>
+            </div>
+          </label>
+        </div>
+
+        <div class="grid-md-6 grid-lg-4 form-group-field d-flex base-line">
+          <label class="grid-4 grid-md-6 grid-lg-4 form-group-field--label-check text-category-info">Mais de
+            {{numberDoses[numberDoses.length-1]}}
+            <input class="form-group-field--label-check--input" type="radio" name="primary-dose{{schemeIndex}}"
+              [value]="numberDoses[numberDoses.length-1] + 1"
+              (click)="disableQuantity(false, scheme, doseEnum.Primaria);" [(ngModel)]="scheme.doseNumberPrimary">
+            <div class="form-group-field--label-check--circle"
+              [ngClass]="errorScheme[schemeIndex]?.doseNumberPrimary == true && scheme.doseNumberPrimary == null ? 'form-group-field--label-check--circle-error' : ''">
+              <span class="check"></span>
+            </div>
+          </label>
+          <div class="grid-8 grid-md-12 grid-lg-12 form-group-field--group">
+            <input class="form-group-field--group__input" type="number" placeholder="Especificar a quantidade"
+              [disabled]="scheme.disableQuantityPrimary" [(ngModel)]="scheme.doseQuantityPrimary"
+              (keyup)="addDoseNumber(scheme.doseQuantityPrimary, scheme, schemeIndex, doseEnum.Primaria)">
+            <p class="text-title-error"
+              *ngIf="errorScheme[schemeIndex]?.doseQuantityPrimary && !scheme.doseQuantityPrimary"
+              id="doseQuantityPrimary{{schemeIndex}}">Campo obrigatório</p>
+            <p class="text-title-error"
+              *ngIf="scheme.doseQuantityPrimary && errorScheme[schemeIndex]?.invalidDoseQuantityPrimary"
+              id="invalidDoseQuantityPrimary{{schemeIndex}}">Quantidade
+              inválida
+            </p>
+          </div>
+        </div>
+
+        <p *ngIf="(!scheme.doseNumberPrimary && !scheme.doseNumberReinforcement) && errorScheme[schemeIndex]?.doseNumber"
+          class="text-title-error m-t-20">
+          É necessário uma dose de esquema primário ou esquema de reforço
+        </p>
+
+      </div>
+
+      <div class="m-t-30 painel-accordion__form" *ngIf="scheme.doseNumberPrimary > 1">
+        <div class="grid-md-6 grid-lg-4 form-group-field p-r-20" id="differentIntervalPrimary{{schemeIndex}}">
+          <label class="form-group-field--label category-info">Existem intervalos diferentes entre as
+            doses do esquema primário?</label>
+          <label class="m-t-20 form-group-field--label-check text-category-info">Sim
+            <input class="form-group-field--label-check--input" type="radio" [value]="true"
+              name="primary-interval{{schemeIndex}}" [(ngModel)]="scheme.differentIntervalPrimary">
+            <div class="form-group-field--label-check--circle"
+              [ngClass]="errorScheme[schemeIndex]?.differentIntervalPrimary == true && scheme.differentIntervalPrimary == null ? 'form-group-field--label-check--circle-error' : ''">
+              <span class="check"></span>
+            </div>
+          </label>
+          <label class="m-t-20 form-group-field--label-check text-category-info">Não
+            <input class="form-group-field--label-check--input" type="radio" [value]="false"
+              name="primary-interval{{schemeIndex}}" [(ngModel)]="scheme.differentIntervalPrimary">
+            <div class="form-group-field--label-check--circle"
+              [ngClass]="errorScheme[schemeIndex]?.differentIntervalPrimary == true && scheme.differentIntervalPrimary == null ? 'form-group-field--label-check--circle-error' : ''">
+              <span class="check"></span>
+            </div>
+          </label>
+        </div>
+
+        <div class="grid-md-6 grid-lg-4 form-group-field" *ngIf="scheme.differentIntervalPrimary">
+          <div *ngFor="let dose of scheme.doses | filterDose: doseEnum.Primaria; let doseIndex = index;">
+            <label class="form-group-field--label category-info">Intervalo entre as doses {{doseIndex+1}} e
+              {{doseIndex+2}} (apenas números)</label>
+            <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-r-10">
+              <input id="intervalToNextInMonths{{schemeIndex}}-Primary{{doseIndex}}"
+                class="form-group-field--group__input" type="number" [(ngModel)]="dose.intervalToNextInMonths"
+                monthValidator onlyNumber>
+              <label for="intervalToNextInMonths{{schemeIndex}}-Primary{{doseIndex}}"
+                class="form-group-field--group__placeholder"
+                [ngClass]="checkValue(dose.intervalToNextInMonths) ? 'form-group-field--group__placeholderSelected' : ''">Meses</label>
+              <p class="text-title-error"
+                *ngIf="errorScheme[schemeIndex]?.dosesPrimary[doseIndex]?.intervalToNextInMonths && dose.intervalToNextInMonths == null && dose.intervalToNextInYears == null">
+                Campo obrigatório
+              </p>
+            </div>
+
+            <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-l-10">
+              <input id="intervalToNextInYears{{schemeIndex}}-Primary{{doseIndex}}"
+                class="form-group-field--group__input" type="number" [(ngModel)]="dose.intervalToNextInYears"
+                onlyNumber>
+              <label for="intervalToNextInYears{{schemeIndex}}-Primary{{doseIndex}}"
+                class="form-group-field--group__placeholder"
+                [ngClass]="checkValue(dose.intervalToNextInYears) ? 'form-group-field--group__placeholderSelected' : ''">Anos</label>
+              <p class="text-title-error"
+                *ngIf="errorScheme[schemeIndex]?.dosesPrimary[doseIndex]?.intervalToNextInYears && dose.intervalToNextInYears == null && dose.intervalToNextInMonths == null">
+                Campo obrigatório
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="grid-md-6 grid-lg-4 form-group-field"
+          *ngIf="scheme.differentIntervalPrimary != null && scheme.differentIntervalPrimary == false">
+          <label class="form-group-field--label category-info">Intervalo entre as doses (apenas números)</label>
+          <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-r-10">
+            <input id="doseEqualQuantityMonthsPrimary{{schemeIndex}}" class="form-group-field--group__input"
+              type="number" [(ngModel)]="scheme.doseEqualQuantityMonthsPrimary" monthValidator onlyNumber>
+            <label for="doseEqualQuantityMonthsPrimary{{schemeIndex}}" class="form-group-field--group__placeholder"
+              [ngClass]="checkValue(scheme.doseEqualQuantityMonthsPrimary) ? 'form-group-field--group__placeholderSelected' : ''">Meses</label>
+            <p class="text-title-error"
+              *ngIf="errorScheme[schemeIndex]?.doseEqualQuantityMonthsPrimary && scheme.doseEqualQuantityMonthsPrimary == null && scheme.doseEqualQuantityYearsPrimary == null">
+              Campo obrigatório
+            </p>
+          </div>
+          <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-l-10">
+            <input id="doseEqualQuantityYearsPrimary{{schemeIndex}}" class="form-group-field--group__input"
+              type="number" [(ngModel)]="scheme.doseEqualQuantityYearsPrimary" onlyNumber>
+            <label for="doseEqualQuantityYearsPrimary{{schemeIndex}}" class="form-group-field--group__placeholder"
+              [ngClass]="checkValue(scheme.doseEqualQuantityYearsPrimary) ? 'form-group-field--group__placeholderSelected' : ''">Anos</label>
+            <p class="text-title-error"
+              *ngIf="errorScheme[schemeIndex]?.doseEqualQuantityMonthsPrimary && scheme.doseEqualQuantityYearsPrimary == null && scheme.doseEqualQuantityMonthsPrimary == null">
+              Campo obrigatório
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="m-t-50 painel-accordion__form">
+        <p class="sub-title">ESQUEMA DE REFORÇO</p>
+
+        <div class="grid-md-6 grid-lg-4 form-group-field" id="reinforcementDose{{schemeIndex}}">
+          <label class="form-group-field--label category-info">Doses de reforço?</label>
+          <label class="m-t-20 form-group-field--label-check text-category-info">Sim
+            <input class="form-group-field--label-check--input" type="radio" [value]="true"
+              name="reinforcement-dose{{schemeIndex}}" (click)="resetDosesSchemeReinforcement(scheme);" [(ngModel)]="scheme.reinforcementDose">
+            <div class="form-group-field--label-check--circle"
+              [ngClass]="errorScheme[schemeIndex]?.reinforcementDose == true && scheme.reinforcementDose == null ? 'form-group-field--label-check--circle-error' : ''">
+              <span class="check"></span>
+            </div>
+          </label>
+          <label class="m-t-20 form-group-field--label-check text-category-info">Não
+            <input class="form-group-field--label-check--input" type="radio" [value]="false"
+              name="reinforcement-dose{{schemeIndex}}" [(ngModel)]="scheme.reinforcementDose">
+            <div class="form-group-field--label-check--circle"
+              [ngClass]="errorScheme[schemeIndex]?.reinforcementDose == true && scheme.reinforcementDose == null ? 'form-group-field--label-check--circle-error' : ''">
+              <span class="check"></span>
+            </div>
+          </label>
+        </div>
+
+        <div class="grid-md-6 grid-lg-4 form-group-field" *ngIf="scheme.reinforcementDose"
+          id="isRecurrent{{schemeIndex}}">
+          <label class="form-group-field--label category-info">Doses recorrentes</label>
+          <label class="m-t-20 form-group-field--label-check text-category-info">Sim
+            <input class="form-group-field--label-check--input" type="radio" [value]="true"
+              name="recurrent-dose{{schemeIndex}}" [(ngModel)]="scheme.isRecurrent"
+              (click)="selectDoseNumber(1, scheme, doseEnum.Reforco); resetDosesReinforcement(scheme)">
+            <div class="form-group-field--label-check--circle"
+              [ngClass]="errorScheme[schemeIndex]?.isRecurrent == true && scheme.isRecurrent == null ? 'form-group-field--label-check--circle-error' : ''">
+              <span class="check"></span>
+            </div>
+          </label>
+          <label class="m-t-20 form-group-field--label-check text-category-info">Não
+            <input class="form-group-field--label-check--input" type="radio" [value]="false"
+              name="recurrent-dose{{schemeIndex}}" [(ngModel)]="scheme.isRecurrent"
+              (click)="deleteArrayOfDoses(scheme, doseEnum.Reforco);">
+            <div class="form-group-field--label-check--circle"
+              [ngClass]="errorScheme[schemeIndex]?.isRecurrent == true && scheme.isRecurrent == null ? 'form-group-field--label-check--circle-error' : ''">
+              <span class="check"></span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div *ngIf="scheme.reinforcementDose">
+        <div class="m-t-20 painel-accordion__form" *ngIf="scheme.reinforcementDose">
+          <div class="grid-md-6 grid-lg-4 form-group-field" *ngIf="scheme.doseNumberPrimary !== 0">
+            <label class="form-group-field--label category-info">Intervalo mínimo entre o esquema
+              primário e a primeira dose reforço
+            </label>
+            <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-r-10">
+              <input id="minimalMonthsIntervalForReinforcement{{schemeIndex}}" class="form-group-field--group__input"
+                type="number" [(ngModel)]="scheme.minimalMonthsIntervalForReinforcement" monthValidator onlyNumber>
+              <label for="minimalMonthsIntervalForReinforcement{{schemeIndex}}"
+                class="form-group-field--group__placeholder"
+                [ngClass]="checkValue(scheme.minimalMonthsIntervalForReinforcement) ? 'form-group-field--group__placeholderSelected' : ''">Meses</label>
+              <p class="text-title-error"
+                *ngIf="errorScheme[schemeIndex]?.minimalMonthsIntervalForReinforcement && scheme.minimalMonthsIntervalForReinforcement == null && scheme.minimalYearsIntervalForReinforcement == null">
+                Campo obrigatório
+              </p>
+            </div>
+
+            <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-l-10">
+              <input id="minimalYearsIntervalForReinforcement{{schemeIndex}}" class="form-group-field--group__input"
+                type="number" [(ngModel)]="scheme.minimalYearsIntervalForReinforcement" onlyNumber>
+              <label for="minimalYearsIntervalForReinforcement{{schemeIndex}}"
+                class="form-group-field--group__placeholder"
+                [ngClass]="checkValue(scheme.minimalYearsIntervalForReinforcement) ? 'form-group-field--group__placeholderSelected' : ''">Anos</label>
+              <p class="text-title-error"
+                *ngIf="errorScheme[schemeIndex]?.minimalYearsIntervalForReinforcement && scheme.minimalYearsIntervalForReinforcement == null && scheme.minimalMonthsIntervalForReinforcement == null">
+                Campo obrigatório
+              </p>
+            </div>
+          </div>
+
+          <div class="grid-md-6 grid-lg-4 form-group-field">
+            <label id="invalidMinimalAgeForReinforcement{{schemeIndex}}" class="form-group-field--label category-info m-b-13">Idade mínima para primeira dose de
+              reforço</label>
+            <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-r-10">
+              <input id="minimalMonthsAgeForReinforcement{{schemeIndex}}" class="form-group-field--group__input"
+                type="number" [(ngModel)]="scheme.minimalMonthsAgeForReinforcement"
+                (keyup)="validateAge(scheme.minimalYearsAgeForReinforcement, schemeIndex, 'invalidMinimalMonthsAgeForReinforcement')"
+                monthValidator onlyNumber>
+              <label for="minimalMonthsAgeForReinforcement{{schemeIndex}}" class="form-group-field--group__placeholder"
+                [ngClass]="checkValue(scheme.minimalMonthsAgeForReinforcement) ? 'form-group-field--group__placeholderSelected' : ''">Meses</label>
+              <p class="text-title-error"
+                *ngIf="errorScheme[schemeIndex]?.minimalMonthsAgeForReinforcement && scheme.minimalMonthsAgeForReinforcement == null && scheme.minimalYearsAgeForReinforcement == null">
+                Campo obrigatório
+              </p>
+            </div>
+
+            <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-l-10">
+              <input id="minimalYearsAgeForReinforcement{{schemeIndex}}" class="form-group-field--group__input"
+                type="number" [(ngModel)]="scheme.minimalYearsAgeForReinforcement"
+                (keyup)="validateAge(scheme.minimalYearsAgeForReinforcement, schemeIndex, 'invalidMinimalMonthsAgeForReinforcement')"
+                onlyNumber>
+              <label for="minimalYearsAgeForReinforcement{{schemeIndex}}" class="form-group-field--group__placeholder"
+                [ngClass]="checkValue(scheme.minimalYearsAgeForReinforcement) ? 'form-group-field--group__placeholderSelected' : ''">Anos</label>
+              <p class="text-title-error"
+                *ngIf="errorScheme[schemeIndex]?.minimalYearsAgeForReinforcement && scheme.minimalYearsAgeForReinforcement == null && scheme.minimalMonthsAgeForReinforcement == null">
+                Campo
+                obrigatório</p>
+              <p id="invalidMinimalMonthsAgeForReinforcement{{schemeIndex}}" class="text-title-error"
+                *ngIf="(scheme.minimalYearsAgeForReinforcement || (_calendarType === calendarTypeEnum.Adulto && scheme.minimalMonthsAgeForReinforcement !== null)) && errorScheme[schemeIndex]?.invalidMinimalMonthsAgeForReinforcement">
+                Idade do
+                Calendário
+                {{_calendarType}} deve ser
+                {{_calendarType === calendarTypeEnum.Adulto ? 'maior que 18' : 'menor que 19'}}
+              </p>
+            </div>
+            
+            <p *ngIf="errorScheme[schemeIndex].invalidMinimalAgeForReinforcement" class="text-title-error">
+              {{errorMessageMinimumAgeAndMaximumConflicting}}
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="m-t-30 painel-accordion__form" *ngIf="scheme.isRecurrent != null && scheme.isRecurrent == false">
+          <div class="m-b-20 form-group-field" id="doseNumberReinforcement{{schemeIndex}}">
+            <label class="form-group-field--label category-info">Quantidade de doses de reforço?</label>
+
+            <label class="m-t-20 form-group-field--label-check text-category-info"
+              *ngFor="let nDose of numberDoses">{{nDose}}
+              <input class="form-group-field--label-check--input" type="radio" [value]="nDose"
+                name="reinforcement-number-dose{{schemeIndex}}"
+                (click)="selectDoseNumber(nDose, scheme, doseEnum.Reforco);"
+                [(ngModel)]="scheme.doseNumberReinforcement">
+              <div class="form-group-field--label-check--circle"
+                [ngClass]="errorScheme[schemeIndex]?.doseNumberReinforcement == true && scheme.doseNumberReinforcement == null ? 'form-group-field--label-check--circle-error' : ''">
+                <span class="check"></span>
+              </div>
+            </label>
+          </div>
+
+          <div class="grid-md-6 grid-lg-4 form-group-field d-flex base-line">
+            <label class="grid-4 grid-md-6 grid-lg-4 form-group-field--label-check text-category-info">Mais de
+              {{numberDoses[numberDoses.length-1]}}
+              <input class="form-group-field--label-check--input" type="radio"
+                name="reinforcement-number-dose{{schemeIndex}}" [value]="numberDoses[numberDoses.length-1]+1"
+                (click)="disableQuantity(false, scheme, doseEnum.Reforco);"
+                [(ngModel)]="scheme.doseNumberReinforcement">
+              <div class="form-group-field--label-check--circle"
+                [ngClass]="errorScheme[schemeIndex]?.doseNumberReinforcement == true && scheme.doseNumberReinforcement == null ? 'form-group-field--label-check--circle-error' : ''">
+                <span class="check"></span>
+              </div>
+            </label>
+            <div class="grid-8 grid-md-12 grid-lg-12 form-group-field--group">
+              <input class="form-group-field--group__input" type="number" placeholder="Especificar a quantidade"
+                [disabled]="scheme.disableQuantityReinforcement" [(ngModel)]="scheme.doseQuantityReinforcement"
+                (keyup)="addDoseNumber(scheme.doseQuantityReinforcement, scheme, schemeIndex, doseEnum.Reforco)">
+              <p class="text-title-error" *ngIf="errorScheme[schemeIndex]?.doseQuantityReinforcement"
+                id="doseQuantityReinforcement{{schemeIndex}}">
+                Campo obrigatório
+              </p>
+              <p class="text-title-error" *ngIf="errorScheme[schemeIndex]?.invalidDoseQuantityReinforcement"
+                id="invalidDoseQuantityReinforcement{{schemeIndex}}">Quantidade
+                inválida</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="m-t-30 painel-accordion__form" *ngIf="scheme.isRecurrent">
+          <div class="grid-md-6 grid-lg-4 form-group-field">
+            <label class="form-group-field--label category-info">Intervalo entre as doses reforço (apenas
+              números)</label>
+            <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-r-10">
+              <input id="doseEqualQuantityMonthsReinforcement{{schemeIndex}}" class="form-group-field--group__input"
+                type="number" [(ngModel)]="scheme.doseEqualQuantityMonthsReinforcement" monthValidator onlyNumber>
+              <label for="doseEqualQuantityMonthsReinforcement{{schemeIndex}}"
+                class="form-group-field--group__placeholder"
+                [ngClass]="checkValue(scheme.doseEqualQuantityMonthsReinforcement) ? 'form-group-field--group__placeholderSelected' : ''">Meses</label>
+              <p class="text-title-error"
+                *ngIf="errorScheme[schemeIndex]?.doseEqualQuantityMonthsReinforcement && scheme.doseEqualQuantityMonthsReinforcement == null && scheme.doseEqualQuantityYearsReinforcement == null">
+                Campo obrigatório
+              </p>
+            </div>
+
+            <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-l-10">
+              <input class="form-group-field--group__input" type="number"
+                id="doseEqualQuantityYearsReinforcement{{schemeIndex}}"
+                [(ngModel)]="scheme.doseEqualQuantityYearsReinforcement" onlyNumber>
+              <label for="doseEqualQuantityYearsReinforcement{{schemeIndex}}"
+                class="form-group-field--group__placeholder"
+                [ngClass]="checkValue(scheme.doseEqualQuantityYearsReinforcement) ? 'form-group-field--group__placeholderSelected' : ''">Anos</label>
+              <p class="text-title-error"
+                *ngIf="errorScheme[schemeIndex]?.doseEqualQuantityYearsReinforcement && scheme.doseEqualQuantityYearsReinforcement == null && scheme.doseEqualQuantityMonthsReinforcement == null">
+                Campo obrigatório
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="m-t-30 painel-accordion__form"
+          *ngIf="scheme.doseNumberReinforcement > 1 && (scheme.isRecurrent != null && scheme.isRecurrent == false)">
+          <div class="grid-md-6 grid-lg-4 form-group-field p-r-20" id="differentIntervalReinforcement{{schemeIndex}}">
+            <label class="form-group-field--label category-info">Existem intervalos diferentes entre as
+              doses de reforço?</label>
+            <label class="m-t-20 form-group-field--label-check text-category-info">Sim
+              <input class="form-group-field--label-check--input" type="radio" [value]="true"
+                name="reinforcement-interval{{schemeIndex}}" [(ngModel)]="scheme.differentIntervalReinforcement">
+              <div class="form-group-field--label-check--circle"
+                [ngClass]="errorScheme[schemeIndex]?.differentIntervalReinforcement == true && scheme.differentIntervalReinforcement == null ? 'form-group-field--label-check--circle-error' : ''">
+                <span class="check"></span>
+              </div>
+            </label>
+            <label class="m-t-20 form-group-field--label-check text-category-info">Não
+              <input class="form-group-field--label-check--input" type="radio" [value]="false"
+                name="reinforcement-interval{{schemeIndex}}" [(ngModel)]="scheme.differentIntervalReinforcement">
+              <div class="form-group-field--label-check--circle"
+                [ngClass]="errorScheme[schemeIndex]?.differentIntervalReinforcement == true && scheme.differentIntervalReinforcement == null? 'form-group-field--label-check--circle-error' : ''">
+                <span class="check"></span>
+              </div>
+            </label>
+          </div>
+
+
+          <div class="grid-md-6 grid-lg-4 form-group-field" *ngIf="scheme.differentIntervalReinforcement">
+            <div *ngFor="let dose of scheme.doses | filterDose: doseEnum.Reforco; let doseIndex = index;">
+              <label class="form-group-field--label category-info">Intervalo entre as doses {{doseIndex+1}} e
+                {{doseIndex+2}} (apenas números)</label>
+              <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-r-10">
+                <input id="intervalToNextInMonths{{schemeIndex}}-Reinforcement{{doseIndex}}"
+                  class="form-group-field--group__input" type="number" [(ngModel)]="dose.intervalToNextInMonths"
+                  monthValidator onlyNumber>
+                <label id="intervalToNextInMonths{{schemeIndex}}-Reinforcement{{doseIndex}}"
+                  class="form-group-field--group__placeholder"
+                  [ngClass]="checkValue(dose.intervalToNextInMonths) ? 'form-group-field--group__placeholderSelected' : ''">Meses</label>
+                <p class="text-title-error"
+                  *ngIf="errorScheme[schemeIndex]?.dosesReinforcement[doseIndex]?.intervalToNextInMonths && dose.intervalToNextInMonths == null && dose.intervalToNextInYears == null">
+                  Campo obrigatório
+                </p>
+              </div>
+
+              <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-l-10">
+                <input id="intervalToNextInYears{{schemeIndex}}-Reinforcement{{doseIndex}}"
+                  class="form-group-field--group__input" type="number" [(ngModel)]="dose.intervalToNextInYears"
+                  onlyNumber>
+                <label for="intervalToNextInYears{{schemeIndex}}-Reinforcement{{doseIndex}}"
+                  class="form-group-field--group__placeholder"
+                  [ngClass]="checkValue(dose.intervalToNextInYears) ? 'form-group-field--group__placeholderSelected' : ''">Anos</label>
+                <p class="text-title-error"
+                  *ngIf="errorScheme[schemeIndex]?.dosesReinforcement[doseIndex]?.intervalToNextInYears && dose.intervalToNextInYears == null && dose.intervalToNextInMonths == null">
+                  Campo obrigatório
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="grid-md-6 grid-lg-4 form-group-field"
+            *ngIf="scheme.differentIntervalReinforcement != null && scheme.differentIntervalReinforcement == false">
+            <label class="form-group-field--label category-info">Intervalo entre as doses de reforço (apenas
+              números)</label>
+            <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-r-10">
+              <input id="doseEqualQuantityMonthsReinforcement{{schemeIndex}}" class="form-group-field--group__input"
+                type="number" [(ngModel)]="scheme.doseEqualQuantityMonthsReinforcement" monthValidator onlyNumber>
+              <label for="doseEqualQuantityMonthsReinforcement{{schemeIndex}}"
+                class="form-group-field--group__placeholder"
+                [ngClass]="checkValue(scheme.doseEqualQuantityMonthsReinforcement) ? 'form-group-field--group__placeholderSelected' : ''">Meses</label>
+              <p class="text-title-error"
+                *ngIf="errorScheme[schemeIndex]?.doseEqualQuantityMonthsReinforcement && scheme.doseEqualQuantityMonthsReinforcement == null && scheme.doseEqualQuantityYearsReinforcement == null">
+                Campo obrigatório
+              </p>
+            </div>
+
+            <div class="grid-6 grid-md-6 grid-lg-6 form-group-field--group p-l-10">
+              <input id="doseEqualQuantityYearsReinforcement{{schemeIndex}}" class="form-group-field--group__input"
+                type="number" [(ngModel)]="scheme.doseEqualQuantityYearsReinforcement" onlyNumber>
+              <label for="doseEqualQuantityYearsReinforcement{{schemeIndex}}"
+                class="form-group-field--group__placeholder"
+                [ngClass]="checkValue(scheme.doseEqualQuantityYearsReinforcement) ? 'form-group-field--group__placeholderSelected' : ''">Anos</label>
+              <p class="text-title-error"
+                *ngIf="errorScheme[schemeIndex]?.doseEqualQuantityYearsReinforcement && scheme.doseEqualQuantityYearsReinforcement == null && scheme.doseEqualQuantityMonthsReinforcement == null">
+                Campo obrigatório
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="m-t-20 m-b-30 painel-accordion__form">
+        <div class="grid-md-6 grid-lg-4 form-group-field">
+          <label class="form-group-field--label category-info">Observações <p class="text-aux">
+              ({{500 - scheme.observations.length}})</p></label>
+          <textarea class="form-group-field--textarea" placeholder="Inserir observações" maxlength="500"
+            [(ngModel)]="scheme.observations"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end">
+      <p class="pointer text-link" (click)="pushScheme();">+Adicionar novo esquema</p>
+    </div>
+  </div>

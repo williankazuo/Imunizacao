@@ -1,0 +1,27 @@
+@import '../../../assets/scss/abstract/mixins';
+
+.container-crud-vaccination {
+    .painel-accordion {
+        &__form {
+            display: block;
+            height: max-content;
+
+            .form-group-field {
+                padding-right: 60px;
+
+                @include rwd-max(767) {
+                    padding-right: 0px;
+                }
+            }
+
+        }
+
+        .sub-title {
+            @include textFormater(0px, $font-family-lato, 14px, $color-blue-bold, true);
+        }
+
+        .border-blue {
+            border-bottom: 1px solid $color-blue-bold;
+        }
+    }
+}

@@ -1,0 +1,247 @@
+/* 
+    Arquivo para formatação de Formulários
+    Inputs em geral e labels
+*/
+
+@import '../../scss/abstract/variables';
+@import '../../scss/abstract/mixins';
+
+// esturtura de classes criada para os formulários de vacinas, patologia e esquema
+.form-group-field {
+
+    // formatação para label
+    &--label {
+        @include orientation(relative, block);
+    }
+
+    &--label-error {
+        color: $color-red;
+    }
+
+    // formatação para input text
+    &--input[type="text"] {
+        @include input-text(100%, 7px);
+    }
+
+    // formatação para inputs que possuem imagens dentro deles
+    &--group {
+        position: relative;
+
+        &__placeholder {
+            position: absolute;
+            top: 15px;
+            margin-left: 15px;
+            @include textCustom($font-family-lato, 14px, $color-placeholder);
+            transition: all 200ms;
+            opacity: 0.7;
+        }
+
+        &__placeholderSelected {
+            top: 8px;
+            left: unset;
+            right: 15px;
+            font-size: 10px;
+        }
+        
+        &__input[type="text"] {
+            padding-right: 30px !important;
+            @include input-text(100%, 5px);
+        }
+
+        &__input[type="number"] {
+            @include input-text(100%, 7px);
+        }
+
+        &__input[type="number"]:focus + &__placeholder {
+            top: 8px;
+            left: unset;
+            right: 15px;
+            font-size: 10px;
+        }
+
+        img {
+            cursor: pointer;
+            position: absolute;
+            right: 5px;
+            top: 5px;
+        }
+    }
+
+
+    // formatação para o texto de adicionar novos inputs
+    &--add-new-field {
+        cursor: pointer;
+        border-bottom: 1px solid $color-blue;
+        @include orientation(relative, inline-block);
+        @include textFormater($margin-top: 10px, $font-size: 16, $color: $color-blue);
+
+        &--blocked {
+            opacity: 0.5;
+            cursor: no-drop;
+        }
+    }
+
+    // formatação para campo textArea
+    &--textarea {
+        min-height: 100px;
+        max-height: 100px;
+        min-width: 100%;
+        max-width: 100%;
+        @include input-text(100%, 7px, 100px);
+    }
+
+    // formatação para input Radio
+    &--label-check {
+        cursor: pointer;
+        padding-left: 30px;
+        margin-right: 30px;
+        @include orientation(relative, inline-block);
+
+        &--input {
+            position: absolute;
+            cursor: pointer;
+            opacity: 0;
+        }
+
+        &--circle {
+            position: absolute;
+            left: 0;
+            top: -1px;
+            height: 17px;
+            width: 17px;
+            border-radius: 50%;
+            background-color: $color-white;
+            border: 1px solid $color-dark-gray;
+        }
+
+        &--circle-error {
+            border: 1px solid $color-red;
+        }
+
+        &--circle .check::after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        &--input:checked~&--circle {
+            border: 1px solid $color-blue-bold;
+        }
+
+        &--input:checked~&--circle .check::after {
+            display: block;
+        }
+
+        &--circle .check::after {
+            top: 2px;
+            left: 2px;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: $color-blue-bold;
+        }
+    }
+
+}
+
+input:disabled, .disabled {
+    background: $color-input-disabled !important;
+    border: 1px solid $color-gray !important;
+    cursor: no-drop;
+}
+
+.input-filter {
+    &__title {
+        @include textCustom($font-family-lato, 14px, $color-blue-bold);
+    }
+
+    &__close {
+        top: 0;
+        left: 0px;
+        position: absolute;
+    }
+
+    &__content {
+
+        &__group {
+
+            &--input {
+                width: 100%;
+                max-width: 422px;
+                position: relative;
+                display: inline-block;
+
+                .input-text {
+                    @include input-text(100%, 7px);
+                    max-width: 422px;
+                }
+
+                &__icon {
+                    position: absolute;
+                    top: 10px;
+                    right: 8px;
+                }
+            }
+
+            &--input-search {
+                @include sm-max() {
+                    width: 50%;
+                }
+            }
+
+            &--button {
+                width: 100%;
+
+                @include sm-max() {
+                    width: 50%;
+                }
+            }
+        }
+    }
+}
+
+@include rwd-min(577) {
+    .mob {
+        display: none;
+    }
+}
+
+@include sm-max() {
+    .desk {
+        display: none;
+    }
+
+    .mob {
+        position: relative;
+        display: block;
+    }
+}
+
+/* 
+    ############### estrutura do input text #############
+    <div class="grid-md-4 grid-lg-4 form-group-field">
+        <label class="form-group-field--label category-info" for="name-vaccine">Nome da vacina*</label>
+        <input class="form-group-field--input" type="text" id="name-vaccine" name="name-vaccine">
+    </div>
+
+    ################# estrutura do input text area ############
+    <div class="grid-md-4 grid-lg-4 form-group-field">
+        <label class="form-group-field--label category-info" for="obs">Observações</label>
+        <textarea class="form-group-field--textarea" id="obs" name="obs"></textarea>
+    </div>
+
+    ############ estrutura para input radio ############
+    <label class="m-t-20 form-group-field--label-check text-category-info">Sim
+        <input class="form-group-field--label-check--input" type="radio" checked="checked" name="vaccine">
+        <div class="form-group-field--label-check--circle">
+            <span class="check"></span>
+        </div>
+    </label>
+
+    ############## estrutura para inputs text que possuem imagens dentro ##########
+    <div class="form-group-field--group">
+        <input class="form-group-field--group__input" type="text" id="name-vaccine" name="name-vaccine">
+        <img src="../../../assets/images/input/Cancelar.png" alt="">
+    </div>
+
+*/

@@ -1,0 +1,92 @@
+.container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px;
+
+    @media screen {
+        max-width: 1200px;
+        padding: 0;
+    }
+}
+
+@include md-max() {
+    .container {
+        width: 100%;
+        padding: 0 30px;
+    }
+}
+
+@include xl-max() {
+    .container {
+        width: 100%;
+        padding: 0 30px;
+    }
+}
+
+/* linha */
+.row {
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
+.row:before,
+.row:after {
+    content: "";
+    display: table;
+}
+
+.row:after {
+    clear: both;
+}
+
+[class*="grid-"] {
+    display: inline-block;
+    vertical-align: top;
+    min-height: 1px;
+    width: 100%;
+    
+    /* *zoom: 1; */
+}
+
+@for $i from 1 through $grid-columns {
+    .grid-#{$i} {
+        width: 100% / $grid-columns * $i;
+    }
+}
+
+/* grid-sm-* Pequenos tablets e grandes smartphones (vista de paisagem) */
+@for $i from 1 through $grid-columns {
+    .grid-sm-#{$i} {
+        @media (min-width: $screen-sm-min) {
+            width: 100% / $grid-columns * $i;
+        }
+    }
+}
+
+/* grid-md-* Pequenos tablets (vista de retrato) */
+@for $i from 1 through $grid-columns {
+    .grid-md-#{$i} {
+        @media (min-width: $screen-md-min) {
+            width: 100% / $grid-columns * $i;
+        }
+    }
+}
+
+/* grid-lg-* Tablets e pequenos desktops */
+@for $i from 1 through $grid-columns {
+    .grid-lg-#{$i} {
+        @media (min-width: $screen-lg-min) {
+            width: 100% / $grid-columns * $i;
+        }
+    }
+}
+
+/* grid-xl-* tablets grandes e desktops */
+@for $i from 1 through $grid-columns {
+    .grid-xl-#{$i} {
+        @media (min-width: $screen-xl-min) {
+            width: 100% / $grid-columns * $i;
+        }
+    }
+}

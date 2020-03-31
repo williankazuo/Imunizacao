@@ -1,0 +1,185 @@
+<section *ngIf="pathologies.id !== 0" class="container m-t-30">
+
+  <article class="d-flex justify-content-space-between align-center grid-lg-12 container__group--nav">
+    <p class="title-info f-s-24 p-r-30"
+      (mouseover)="changeTooltip($event, pathologies.pathologyName, true, tooltipLengthCharacter.detailsPathology)"
+      (mouseout)="changeTooltip($event, pathologies.pathologyName, false, tooltipLengthCharacter.detailsPathology)">
+      {{pathologies.pathologyName}}
+    </p>
+
+    <div class="container__group--nav__buttons container-button-flex d-flex justify-content-end">
+      <button class="btn btn--back" [routerLink]="['/lista-patologias']">Voltar</button>
+    </div>
+
+  </article>
+
+  <article class="grid-lg-12 m-t-50 container__group--details">
+
+    <div class="d-flex align-center painel-header-accordion">
+      <p class="painel-header-accordion__title">Esquemas</p>
+
+      <app-three-dot-menu class="three-dot-menu" [options]="options" (responseSelected)="receiveSelected($event)">
+      </app-three-dot-menu>
+
+    </div>
+
+    <div *ngFor="let item of pathologies.schemes; let i = index" class="p-b-30 grid-lg-12 painel-accordion">
+
+      <div class="painel-accordion__vaccine">
+        <p class="painel-accordion__vaccine--name">Esquema {{i+1}}</p>
+      </div>
+
+      <div class="painel-accordion__data">
+        <div class="grid-md-3 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Vacina</p>
+          <p *ngFor="let vaccines of item.vaccineList" class="text-category-info no-ellipsis">{{vaccines.name}}</p>
+        </div>
+
+        <div class="grid-md-3 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Aplicada a pessoas do sexo</p>
+          <p class="text-category-info">{{item.gender | gender}}</p>
+        </div>
+
+        <div *ngIf="pathologies.pathologyCalendarType !== calendarTypeEnum.Infantil"
+          class="grid-md-3 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Esquema necessário caso já tenha sido imunizado anteriormente</p>
+          <p class="text-category-info">{{item.isNotRequiredIfPreviouslyTaken | booleanText}}</p>
+        </div>
+
+        <div class="grid-md-3 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Idade de calendário</p>
+          <p class="text-category-info">{{item.years | yearFormater}}
+            {{(item.years && item.months) ? 'e' : ''}}
+            {{!item.years || item.months > 0 ? (item.months | monthFormater) : ''}}
+          </p>
+        </div>
+      </div>
+
+      <div class="painel-accordion__data">
+        <div class="grid-md-3 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Idade mínima</p>
+          <p class="text-category-info">{{item.minimumYearAge | yearFormater}}
+            {{(item.minimumYearAge && item.minimumMonthAge) ? 'e' : ''}}
+            {{!item.minimumYearAge || item.minimumMonthAge > 0 ? (item.minimumMonthAge | monthFormater) : ''}}
+          </p>
+        </div>
+
+        <div class="grid-md-6 grid-lg-6 painel-accordion__data__element">
+          <p class="category-info">Idade máxima</p>
+          <p class="text-category-info">{{item.maximumYearAge | yearFormater}}
+            {{(item.maximumYearAge && item.maximumMonthAge) ? 'e' : ''}}
+            {{!item.maximumYearAge || item.maximumMonthAge > 0 ? (item.maximumMonthAge | monthFormater) : ''}}
+          </p>
+        </div>
+
+      </div>
+
+      <div class="painel-accordion__data">
+        <div class="grid-md-3 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Quantidade de doses do esquema primário</p>
+          <p class="text-category-info">
+            {{item['countDosePrimary'] | dose }}
+          </p>
+        </div>
+
+        <div class="grid-md-3 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Intervalo diferente entre as doses primárias?</p>
+          <p class="text-category-info">{{ item['intervalDosePrimary'] ? 'Sim' : 'Não' }}</p>
+        </div>
+
+        <div class="grid-md-3 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Intervalo entre as doses primárias</p>
+
+          <p
+            *ngIf="(item['dosePrimary']?.length === 0 || item['dosePrimary']?.length === 1) && !item['intervalDosePrimary']"
+            class="text-category-info">-
+          </p>
+
+          <div *ngFor="let dose of item['dosePrimary']; let i = index" class="text-category-info">
+            <ng-container *ngIf="dose.doseType !== 'Reinforcement' && dose.intervalToNextDose > 0;">
+              {{ item['intervalDosePrimary'] ? 'Doses ' + (i + 1) + ' e ' + (i + 2) + ': ' :  'Dose em: '}}
+              {{dose.intervalToNextDose | monthsYearsFormater}}
+            </ng-container>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="painel-accordion__data">
+        <div class="grid-md-3 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Reforços</p>
+          <p class="text-category-info">{{item['doseReinforcement'].length > 0 ? 'Sim' :  'Não'}}</p>
+        </div>
+
+        <div class="grid-md-3 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Doses recorrentes</p>
+          <p class="text-category-info">{{item?.isRecurrent ? 'Sim' :  'Não'}}</p>
+        </div>
+
+        <div class="grid-md-3 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Intervalo mínimo até a primeira dose de reforço</p>
+          <p class="text-category-info"
+            *ngIf="item.minimalYearsIntervalForReinforcement || item.minimalMonthsIntervalForReinforcement; else noMinimalInterval">
+            {{item.minimalYearsIntervalForReinforcement | yearFormater}}
+            {{(item.minimalYearsIntervalForReinforcement && item.minimalMonthsIntervalForReinforcement) ? 'e' : ''}}
+            {{!item.minimalYearsIntervalForReinforcement || item.minimalMonthsIntervalForReinforcement > 0 ? (item.minimalMonthsIntervalForReinforcement | monthFormater) : ''}}
+          </p>
+          <ng-template #noMinimalInterval>
+            <p class="text-category-info">-</p>
+          </ng-template>
+        </div>
+
+        <div class="grid-md-3 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Idade mínima para primeira dose de reforço</p>
+          <p class="text-category-info"
+            *ngIf="item.minimalYearsAgeForReinforcement || item.minimalMonthsAgeForReinforcement; else noMinimalAge">
+            {{item.minimalYearsAgeForReinforcement | yearFormater}}
+            {{(item.minimalYearsAgeForReinforcement && item.minimalMonthsAgeForReinforcement) ? 'e' : ''}}
+            {{!item.minimalYearsAgeForReinforcement || item.minimalMonthsAgeForReinforcement > 0 ? (item.minimalMonthsAgeForReinforcement | monthFormater) : ''}}
+          </p>
+          <ng-template #noMinimalAge>
+            <p class="text-category-info">-</p>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="painel-accordion__data">
+        <div class="grid-md-3 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Quantidade de reforços</p>
+          <p class="text-category-info">
+            {{item['countDoseReinforcement'] | dose}}
+          </p>
+        </div>
+
+        <div class="grid-md-3 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Intervalo diferente entre as doses reforço? </p>
+          <p class="text-category-info">{{ item['intervalDoseReinforcement'] ? 'Sim' : 'Não' }}</p>
+        </div>
+
+        <div class="grid-md-3 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Intervalo entre as doses reforço</p>
+
+          <p *ngIf="item['doseReinforcement'].length === 0 && !item['intervalDoseReinforcement']"
+            class="text-category-info">-</p>
+
+          <div *ngFor="let dose of item['doseReinforcement']; let i = index" class="text-category-info">
+            <ng-container *ngIf="dose.doseType === 'Reinforcement' && dose.intervalToNextDose > 0">
+              {{ item['intervalDoseReinforcement'] ? 'Doses ' + (i + 1) + ' e ' + (i + 2) + ': ' :  'Dose em: '}}
+              {{dose.intervalToNextDose | monthsYearsFormater}}
+            </ng-container>
+          </div>
+
+        </div>
+
+        <div class="grid-md-6 grid-lg-6 painel-accordion__data__element">
+          <p class="category-info">Observações </p>
+          <p class="text-category-info no-ellipsis">{{item.observations}} </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </article>
+
+</section>

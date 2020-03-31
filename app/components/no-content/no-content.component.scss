@@ -1,0 +1,11 @@
+@import '../../../assets/scss/abstract/mixins';
+
+.container-no-content {
+  &__group {
+    &--title {
+      &__element {
+        @include textFormater(0px, $font-family-nunito, 32px, $color-blue-bold);
+      }
+    }
+  }
+}

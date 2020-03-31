@@ -1,0 +1,27 @@
+<div (focusin)="showBox(true)" class="typeahead-container">
+  <div class="form-group-field">
+
+    <input #inputVaccine typeahead-close [element]="inputVaccine" (showBox)="showBox($event)" 
+      typeahead-list [value]="searchValue" [listElement]="htmlList" [containerElements]="containerList"
+      (returnElementSelected)="selectElementByEnter($event)"
+      class="form-group-field--group__input typeahead" autocomplete="off" type="text" [id]="idInput" [name]="idInput"
+      [placeholder]="placeholder" (keyup)="searchElement(searchValue, $event)" [(ngModel)]="searchValue"
+      [disabled]="blockInput">
+  </div>
+  <ul [hidden]="!openTypeaHead" class="option-elements shadow" id="option-elements{{idBox}}">
+    <li *ngFor="let item of filteredList; let i = index;" id="list{{i}}" class="option-elements__item pointer list{{idBox}}"
+      (click)="selectItem(item)">
+      <p class="option-elements__item__content--text">{{item.name}}</p>
+      <div class="option-elements__item__content--border" *ngIf="i !== filteredList.length-1">
+        <hr class="option-elements__item__content--border__hr">
+      </div>
+    </li>
+  </ul>
+  <ul *ngIf="searchValue.length > 0 && filteredList.length === 0 && notfound" class="option-elements shadow">
+    <li class="option-elements__item pointer" (click)="selectItem(null)">
+      <p class="option-elements__item__content--text">Nenhum resultado encontrado</p>
+    </li>
+  </ul>
+  <p *ngIf="invalidData" class="text-title-error">{{error}}</p>
+  <p *ngIf="(required || activeError) && !invalidData" class="text-title-error">Campo obrigatório</p>
+</div>

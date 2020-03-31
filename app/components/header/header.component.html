@@ -1,0 +1,29 @@
+<header class="header">
+  <div class="grid-lg-12 d-inline-flex justify-content-space-between header__group">
+    <article class="d-flex align-center pointer header__group__element--logo-system"
+      (click)="redirectHome('lista-patologias');">
+      <img class="header__group__element--logo-system--desk" src="../../../assets/images/header/bg_logosystem.png">
+      <img class="header__group__element--logo-system--mobile" src="../../../assets/images/header/logo_mobile.png">
+    </article>
+
+    <nav *ngIf="menuActive" class="header__group__element--menu">
+      <ul class="d-inline-flex justify-content-center align-center header__group__element--menu__list">
+        <li class="d-flex justify-content-center align-center pointer header__group__element--menu__list__item"
+          [ngClass]="{'header__group__element--menu__list__item--selected' : menuSelected.indexOf('patologia') != -1}"
+          (click)="selectMenu('lista-patologias');">
+          <p class="header__group__element--menu__list__item--title">Patologias</p>
+        </li>
+        <li class="d-flex justify-content-center align-center pointer header__group__element--menu__list__item"
+          [ngClass]="{'header__group__element--menu__list__item--selected' : menuSelected.indexOf('vacina') != -1}"
+          (click)="selectMenu('lista-vacinas');">
+          <p class="header__group__element--menu__list__item--title">Vacinas</p>
+        </li>
+      </ul>
+    </nav>
+
+    <article *ngIf="menuActive" class="d-flex align-center header__group__element--logout">
+      <p class="m-r-13 header__group__element--logout__text">Olá, <strong>{{userName}}</strong></p>
+      <img class="pointer" src="../../../assets/images/header/icon_logout.png" (click)="logout();">
+    </article>
+  </div>
+</header>

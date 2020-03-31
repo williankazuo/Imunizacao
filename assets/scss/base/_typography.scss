@@ -1,0 +1,65 @@
+/* 
+    Arquivo para formatação de TEXTOS usado no sistema
+*/
+
+// utilizado nos titulos de inicio de página
+// o tamanho da fonto utilizar as classes do .f-s#{$i}
+.title-info {
+    font-family: $font-family-nunito;
+    color: $color-blue-bold;
+    display: inline-block;
+    font-weight: 600;
+    @include ellipse(100%);
+}
+
+// utilizado nas categorias dos paineis
+.category-info {
+    @include textFormater(10px, $font-family-lato, 12px, $color-blue-bold, true);
+    margin-bottom: 5px;
+}
+
+// utilizado nos textos abaixo das categorias (nos paineis)
+.text-category-info {
+    @include textFormater(5px, $font-family-lato, 12px, $color-dark-gray, false);
+}
+
+// utilizado nos textos abaixo das categorias (nos paineis)
+.text-category-aux {
+    bottom: 0;
+    right: 0px;
+    opacity: 0.7;
+    position: absolute;
+    @include textFormater(5px, $font-family-lato, 12px, $color-dark-gray, false);
+}
+
+.text-title-info {
+    @include textFormater(8px, $font-family-lato, 14px, $color-dark-gray, false);
+}
+
+.text-title-error {
+    @include textFormater(5px, $font-family-lato, 12px, $color-red, false);
+}
+
+.text-link {
+    text-decoration: underline;
+    @include textFormater(0px, $font-family-lato, 16px, $color-blue, false);
+}
+
+.no-ellipsis {
+    white-space: initial !important;
+    word-break: break-word;
+}
+
+.text-aux {
+    opacity: 0.5;
+    margin-left: 5px;
+    display: inline-block;
+    @include textFormater($font-size: 12px, $color: $color-blue);
+}
+
+// range de tamanho de fontes
+@for $i from 1 through 30 {
+    .f-s-#{$i} {
+        font-size: #{$i}px;
+    }
+}

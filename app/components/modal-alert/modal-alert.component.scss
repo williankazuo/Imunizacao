@@ -1,0 +1,44 @@
+@import '../../../assets/scss/abstract/variables';
+@import '../../../assets/scss/abstract/mixins';
+
+.container-alert {
+  @include align(true, true, fixed);
+  background-color: $color-white;
+  width: 326px;
+  height: 184px;
+  z-index: 3;
+
+  &__group {
+    &--content {
+      @include orientation(relative, block);
+      padding: 30px 20px;
+      height: 100%;
+
+      &__elements {
+
+        &--hr {
+          border-top: none;
+          @include hr($color-placeholder, 1px);
+          opacity: 0.25;
+        }
+
+        &--close {
+          position: absolute;
+          top: 5px;
+          right: 5px;
+        }
+      }
+    }
+  }
+
+}
+
+.container-outside {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: fixed;
+  z-index: 2;
+  background-color: $color-white-background;
+}

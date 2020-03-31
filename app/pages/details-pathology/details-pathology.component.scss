@@ -1,0 +1,44 @@
+@import '../../../assets/scss/abstract/mixins';
+@import '../../../assets/scss/abstract/variables';
+
+.container {
+    position: relative;
+
+    &__group--nav {
+        &__buttons {
+            @include orientation(relative, inline-block);
+        }
+    }
+
+    &__group--details {
+        position: relative;
+
+        .painel-accordion {
+
+            &__vaccine {
+                padding-bottom: 12px;
+                @include hr($color-blue-bold);
+
+                &--name {
+                    @include textCustom($font-family-lato, 14px, $color-blue-bold, true);
+                }
+            }
+
+            &__data {
+                display: block;
+                height: max-content;
+
+                &__element {
+                    padding-right: 20px;
+
+                    @include lg-min () {
+                        padding-right: 50px;
+                    }
+                }
+
+            }
+
+        }
+
+    }
+}

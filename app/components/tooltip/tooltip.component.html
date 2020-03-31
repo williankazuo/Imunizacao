@@ -1,0 +1,5 @@
+<section [hidden]="!configTooltip.showTooltip" class="container-tooltip" id="tooltip">
+  <div *ngIf="configTooltip.showTooltip" class="container-tooltip__group">
+    <p class="container-tooltip__group--text">{{setPositionTooltip(configTooltip.positionX, configTooltip.positionY) ? configTooltip.textTooltip : '' }}</p>
+  </div>
+</section>

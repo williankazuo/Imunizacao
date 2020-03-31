@@ -1,0 +1,20 @@
+<section *ngIf="!response; else finalization" class="container m-t-30">
+
+  <article class="d-flex justify-content-space-between grid-lg-12 container__group--nav">
+    <p class="title-info f-s-24">Cadastrar Vacina</p>
+
+    <div class="container__group--nav__buttons">
+      <button class="btn btn--back" [routerLink]="['/lista-vacinas']">Cancelar</button>
+    </div>
+  </article>
+
+  <article class="m-t-30 container__group--crud">
+    <app-crud-vaccines (response)="responseChild($event)" [createVaccine]="true" [vaccine]="vaccine">
+    </app-crud-vaccines>
+  </article>
+
+</section>
+
+<ng-template #finalization>
+  <app-finalization [options]="options"></app-finalization>
+</ng-template>

@@ -1,0 +1,70 @@
+<section class="container m-t-30">
+
+  <article class="d-flex justify-content-space-between align-center grid-lg-12 container__group--nav">
+    <p class="title-info f-s-24 p-r-50"
+      (mouseover)="changeTooltip($event, vaccine.name, true, tooltipLengthCharacter.detailsVaccine)"
+      (mouseout)="changeTooltip($event, vaccine.name, false, tooltipLengthCharacter.detailsVaccine)">
+      {{vaccine.name}}
+    </p>
+
+    <div class="container__group--nav__buttons container-button-flex d-flex justify-content-end">
+      <button class="btn btn--back" [routerLink]="['/lista-vacinas']">Voltar</button>
+    </div>
+
+  </article>
+
+  <article class="grid-lg-12 m-t-30 container__group--details">
+
+    <div class="d-flex align-center painel-header-accordion">
+      <p class="painel-header-accordion__title">Vacina</p>
+
+      <app-three-dot-menu class="three-dot-menu" [options]="options" (responseSelected)="receiveSelected($event)">
+      </app-three-dot-menu>
+
+    </div>
+
+    <div class="grid-lg-12 painel-accordion">
+
+      <div class="painel-accordion__data">
+        <div class="grid-md-4 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Contraindicação</p>
+          <p class="text-category-info no-ellipsis" *ngFor="let item of vaccine.contraIndications">{{item}}</p>
+          <p class="text-category-info" *ngIf="vaccine.contraIndications.length === 0">-</p>
+        </div>
+
+        <div class="grid-md-4 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Não aplica concomitantemente com:</p>
+          <p class="text-category-info no-ellipsis" *ngFor="let item of vaccine.notConcomitanceVaccines">{{item.name}}
+          </p>
+          <p class="text-category-info" *ngIf="vaccine.notConcomitanceVaccines.length === 0">-</p>
+        </div>
+
+        <div class="grid-md-4 grid-lg-6 painel-accordion__data__element">
+          <p class="category-info">Necessário pedido médico?</p>
+          <p class="text-category-info">{{vaccine.medicalOrderIsRequired ? 'Sim' : 'Não'}}</p>
+        </div>
+      </div>
+
+      <div class="painel-accordion__data">
+        <div class="grid-md-4 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Vacina de vírus vivo?</p>
+          <p class="text-category-info">{{vaccine.isLiveVirus ? 'Sim' : 'Não'}}</p>
+        </div>
+
+        <div class="grid-md-4 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Observações</p>
+          <p class="text-category-info no-ellipsis">{{vaccine.observations ? vaccine.observations : '-'}}</p>
+        </div>
+
+        <div class="grid-md-4 grid-lg-3 painel-accordion__data__element">
+          <p class="category-info">Recomendações</p>
+          <p class="text-category-info no-ellipsis">{{vaccine.recommendations ? vaccine.recommendations : '-'}}</p>
+        </div>
+      </div>
+
+    </div>
+
+  </article>
+
+
+</section>

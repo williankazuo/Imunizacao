@@ -1,0 +1,20 @@
+<div class="container-three-dot-menu">
+  <div class="pointer container-three-dot-menu__items" (click)="openMenu();">
+    <div class="container-three-dot-menu__items__white-circle"></div>
+    <div class="m-t-2 container-three-dot-menu__items__white-circle"></div>
+    <div class="m-t-2 container-three-dot-menu__items__white-circle"></div>
+  </div>
+
+  <ul class="option-elements shadow" *ngIf="opened">
+    <li class="option-elements__item pointer" *ngFor="let item of options; let i = index;"
+      (click)="optionClicked(item);">
+      <p class="option-elements__item__content--text">{{item.name}}</p>
+      <div class="option-elements__item__content--border" *ngIf="i !== options.length-1">
+        <hr class="option-elements__item__content--border__hr">
+      </div>
+    </li>
+  </ul>
+</div>
+
+<div class="container-outside" *ngIf="opened" (click)="openMenu();">
+</div>

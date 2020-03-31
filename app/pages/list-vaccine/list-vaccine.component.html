@@ -1,0 +1,133 @@
+<section class="container m-t-18">
+
+  <article class="container__group--search desk">
+    <p class="input-filter__title">Procure aqui</p>
+
+    <div class="d-flex align-center input-filter__content">
+      <div class="input-filter__content__group--input">
+        <input type="text" class="input-text" placeholder="Por nome específico..." (keyup.enter)="filterVaccines();"
+          [(ngModel)]="search">
+        <img src="../../../assets/images/pathology/icon_search.png" class="input-filter__content__group--input__icon">
+      </div>
+
+      <div class="input-filter__content__group--button m-t-7 d-flex justify-content-space-between">
+        <button class="m-l-13 m-r-13 btn btn--edit" (click)="filterVaccines();">Pesquisar</button>
+        <button class="btn btn--back" [routerLink]="['/cadastro-vacinas']">Adicionar vacina</button>
+      </div>
+
+    </div>
+  </article>
+
+  <!-- HEADER MOBILE -->
+  <article class="container__group--search mob">
+    <p *ngIf="showMenuMobile" class="input-filter__title p-a-4 m-l-30">Procure aqui</p>
+
+    <img *ngIf="showMenuMobile" (click)="showMenuMobile = !showMenuMobile"
+      src="../../../assets/images/input/Cancelar.png" class="input-filter__close">
+
+    <div class="d-flex align-center input-filter__content">
+
+      <div *ngIf="showMenuMobile" class="input-filter__content__group--input">
+        <input type="text" class="input-text" placeholder="Por nome específico..." (keyup.enter)="filterVaccines();"
+          [(ngModel)]="search">
+        <img src="../../../assets/images/pathology/icon_search.png" class="input-filter__content__group--input__icon">
+      </div>
+
+      <div *ngIf="!showMenuMobile" (click)="showMenuMobile = !showMenuMobile"
+        class="input-filter__content__group--input-search">
+        <img src="../../../assets/images/input/icon_lupa_azul.png" class="">
+      </div>
+
+      <div class="input-filter__content__group--button m-t-7 d-flex"
+        [ngClass]="showMenuMobile ? 'justify-content-space-between' : 'justify-content-end'">
+        <button *ngIf="showMenuMobile" class="m-l-13 btn btn--edit" (click)="filterVaccines();">Pesquisar</button>
+        <button *ngIf="!showMenuMobile" class="btn btn--back" [routerLink]="['/cadastro-vacinas']">Adicionar
+          vacina
+        </button>
+      </div>
+
+    </div>
+  </article>
+  <!-- HEADER MOBILE -->
+
+  <article class="m-t-20 container__group--data">
+
+    <div class="m-t-30 p-t-20 container__group--data__excel" *ngIf="vaccineList.length > 0">
+      <div class="d-inline-flex pointer" (click)="exportExcel()">
+        <p class="text-link m-r-10">Exportar</p>
+        <img src="../../../assets/images/pathology/ic_excel_green.png">
+      </div>
+    </div>
+
+    <div class="grid-lg-12 m-t-20 container__group--data__content--calendar__cardgroup" *ngIf="!showNotFound">
+      
+      <div class="grid-lg-4 grid-md-6 card-list" *ngFor="let vaccine of vaccineList">
+
+        <div class="d-flex align-center painel-header-accordion">
+
+          <p class="painel-header-accordion__title"
+            (mouseover)="changeTooltip($event, vaccine.name, true, tooltipLengthCharacter.listVaccineTitleLength)"
+            (mouseout)="changeTooltip($event, vaccine.name, false, tooltipLengthCharacter.listVaccineTitleLength)">
+            {{vaccine.name}}
+          </p>
+
+          <app-three-dot-menu class="three-dot-menu" [options]="options"
+            (responseSelected)="receiveSelected($event, vaccine.id)">
+          </app-three-dot-menu>
+        </div>
+        <div class="grid-lg-12 painel-accordion">
+          <div class="painel-accordion__data">
+            <div class="painel-accordion__data__element">
+              <p class="category-info">Contraindicações</p>
+              <p class="text-category-info" *ngFor="let contraIndication of vaccine.showContraindication"
+                (mouseover)="changeTooltip($event, contraIndication, true, tooltipLengthCharacter.listVaccineLength)"
+                (mouseout)="changeTooltip($event, contraIndication, false, tooltipLengthCharacter.listVaccineLength)">
+                {{contraIndication}}
+              </p>
+              <p class="text-category-aux" *ngIf="vaccine.contraIndications.length > 2">
+                + {{vaccine.contraIndications.length - 2}}
+              </p>
+              <p class="text-category-info" *ngIf="vaccine.contraIndications?.length < 1">-</p>
+            </div>
+          </div>
+          <div class="m-t-15 painel-accordion__data">
+            <div class="painel-accordion__data__element">
+              <p class="category-info">Não aplicar concomitantemente com:</p>
+              <p class="text-category-info"
+                *ngFor="let concomitant of vaccine.showNotConcomitance; trackBy:indexTracker"
+                (mouseover)="changeTooltip($event, concomitant.name, true, tooltipLengthCharacter.listVaccineLength)"
+                (mouseout)="changeTooltip($event, concomitant.name, false, tooltipLengthCharacter.listVaccineLength)">
+                {{concomitant.name}}
+              </p>
+              <p class="text-category-aux" *ngIf="vaccine.notConcomitanceVaccines?.length > 2">
+                + {{vaccine.notConcomitanceVaccines.length - 2}}
+              </p>
+              <p class="text-category-info" *ngIf="vaccine.notConcomitanceVaccines?.length < 1">-</p>
+            </div>
+          </div>
+
+          <div class="m-t-10 painel-accordion__data">
+            <div class="grid-md-6 grid-lg-6 painel-accordion__data__element">
+              <p class="category-info">Pedido médico</p>
+              <p class="text-category-info">
+                {{vaccine.medicalOrderIsRequired === null ? '-' : vaccine.medicalOrderIsRequired | booleanTextNecessary}}
+              </p>
+            </div>
+            <div class="grid-md-6 grid-lg-6 painel-accordion__data__element">
+              <p class="category-info">Vírus vivo</p>
+              <p class="text-category-info">{{vaccine.isLiveVirus === null ? '-' : vaccine.isLiveVirus | booleanText}}
+              </p>
+            </div>
+          </div>
+
+          <div class="m-t-20 text-align-right painel-accordion__data__details">
+            <p class="pointer text-link" routerLink="/detalhes-vacina/{{vaccine.id}}">Ver detalhes</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <app-no-content *ngIf="showNotFound" [noContentConfig]="configNotFound"></app-no-content>
+  </article>
+</section>

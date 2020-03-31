@@ -1,0 +1,20 @@
+<section class="container-finalization d-flex justify-content-center">
+  <article class="grid-sm-10 grid-md-6 container-finalization__group text-align-center">
+    <div class="container-finalization__group--title m-b-30">
+      <p class="container-finalization__group--title__text">{{options.title}}</p>
+    </div>
+    <div class="container-finalization__group--img m-b-30">
+      <img *ngIf="options.successImg" src="../../../assets/images/finalization/icone192-check.png" alt="">
+      <img *ngIf="!options.successImg" src="../../../assets/images/not-found/icone192-erro.png" alt="">
+    </div>
+    <div *ngIf="options.text !== '' && options.text" class="container-finalization__group--text m-b-30">
+      <p class="container-finalization__group--title text-title-info">{{options.text}}</p>
+    </div>
+    <div class="container-finalization__group--buttons">
+      <button class="btn btn--back m-r-30" (click)="options.actionbtn1()"
+        *ngIf="options.buttonName1 != '' && options.buttonName1">{{options.buttonName1}}</button>
+      <button class="btn btn--add" (click)="options.actionbtn2()"
+        *ngIf="options.buttonName2 != '' && options.buttonName2">{{options.buttonName2}}</button>
+    </div>
+  </article>
+</section>

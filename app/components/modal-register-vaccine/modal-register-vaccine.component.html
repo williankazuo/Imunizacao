@@ -1,0 +1,18 @@
+<section *ngIf="showModal" class="background-modal">
+  <article class="container d-flex align-center">
+
+    <div *ngIf="!response; else finalization" class="container__modal">
+      <app-crud-vaccines [modal]="true" [idBoxTypeaHead]="modalId" [createVaccine]="true"
+        (closeModal)="closeModal($event)" (response)="responseChild($event)" [createVaccine]="true"
+        [vaccine]="vaccineSelected">
+      </app-crud-vaccines>
+    </div>
+
+    <ng-template #finalization>
+      <div class="container__modal">
+        <app-finalization [options]="options"></app-finalization>
+      </div>
+    </ng-template>
+
+  </article>
+</section>

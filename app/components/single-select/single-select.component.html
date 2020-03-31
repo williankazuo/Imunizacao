@@ -1,0 +1,17 @@
+<div class="container-single-select pointer">
+  <div [ngClass]="{'disabled': desableSelect}" class="container-single-select__input--select"
+    (click)="opened = !opened;">
+    <p [ngClass]="{'selected': valueSelected !== 'Selecionar'}">{{valueSelected}}</p>
+    <img class="container-single-select__input--select__img" src="../../../assets/images/input/ic_arrow_drop_down.png"
+      alt="">
+  </div>
+  <ul class="option-elements shadow" *ngIf="opened && !desableSelect">
+    <li class="option-elements__item pointer" *ngFor="let item of options; let i = index;"
+      (click)="optionClicked(item);">
+      <p class="option-elements__item__content--text">{{item.name}}</p>
+      <div class="option-elements__item__content--border" *ngIf="i !== options.length-1">
+        <hr class="option-elements__item__content--border__hr">
+      </div>
+    </li>
+  </ul>
+</div>

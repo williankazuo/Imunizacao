@@ -1,0 +1,33 @@
+<section class="container-login d-inline-flex">
+  <article class="container-login__group--bgContent">
+    <img src="../../../assets/images/login/logo_login.png">
+  </article>
+
+  <article class="d-inline-flex align-center container-login__group--content">
+    <div class="container-login__group--content__data">
+      <div>
+        <p class="f-s-24 title-info">Login</p>
+        <p class="text-title-info">Preencha os campos para acessar:</p>
+      </div>
+
+      <div class="container-login__group--content__data__form">
+        <p class="category-info category-info--login">Usuário de rede:</p>
+        <input type="text" class="input-text" [(ngModel)]="login.username" (keyup.enter)="authenticate();">
+
+        <p class="category-info category-info--login">Senha de rede:</p>
+        <input [type]="showPassword? 'text' : 'password'" class="input-text" [(ngModel)]="login.password"
+          (keyup.enter)="authenticate();">
+        <div class="container-login__group--content__data__form__eye">
+          <img
+            [src]="!showPassword ? '../../../assets/images/login/icon_olho_cinza.svg' : '../../../assets/images/login/ic_olho-azul.png'"
+            (click)="showPassword = !showPassword">
+        </div>
+
+        <p class="text-title-error" *ngIf="errorLogin">{{errorMessage}}</p>
+      </div>
+      <div class="container-login__group--content__data__form--nav-buttons">
+        <button class="btn btn--default" (click)=" authenticate();">Entrar</button>
+      </div>
+    </div>
+  </article>
+</section>

@@ -1,0 +1,34 @@
+.option-elements {
+    overflow-x: hidden !important;
+    position: absolute;
+    max-height: 160px;
+    width: 100%;
+    overflow: auto;
+    background: white;
+    z-index: 2;
+
+    &__item {
+
+        &__content {
+
+            &--text {
+                padding: 10px 10px;
+                @include textCustom($font-family-lato, 14px, $color-dark-gray, $bold: false);
+            }
+
+            &--border {
+                padding: 0 10px;
+
+                &__hr {
+                    border-top: none;
+                    @include hr($color-dark-gray, 1px);
+                }
+            }
+        }
+    }
+
+    &__item:hover {
+        background: $color-hover;
+    }
+
+}

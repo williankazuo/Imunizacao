@@ -1,0 +1,49 @@
+@import '../../../assets/scss/abstract/mixins';
+
+.painel-accordion__data__element {
+  min-height: 80px;
+}
+
+.container {
+  &__group {
+
+    // Conteúdo do calendário
+    &--data {
+
+      &__content {
+        
+        &--menu {
+          @include hr($color-blue-bold, 1px);
+
+          &__list {
+            height: 100%;
+
+            &__item {
+              height: 35px;
+              width: 140px;
+
+              &--selected {
+                @include hr($color-blue, 4px);
+              }
+
+              &--title {
+                @include textCustom($font-family-lato, 18px, $color-blue-bold, true);
+              }
+
+              &--title-notbold {
+                @include textCustom($font-family-lato, 18px, $color-blue-bold);
+              }
+            }
+          }
+        }
+
+        &--calendar {
+
+          &__export {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+@import '../../../assets/scss/abstract/mixins';
+
+.container-three-dot-menu {
+  width: 125px;
+
+  .option-elements {
+    top: 25px;
+  }
+
+  &__items {
+    z-index: 2;
+    position: absolute;
+    right: 0px;
+    width: 25px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+
+    &__white-circle {
+      width: 5px;
+      background-color: white;
+      border-radius: 50%;
+      height: 5px;
+    }
+  }
+}
+
+.container-outside {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: fixed;
+  z-index: 1;
+}

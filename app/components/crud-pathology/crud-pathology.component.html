@@ -1,0 +1,26 @@
+<div class="container-crud-pathology">
+  <div class="d-flex align-center painel-header-accordion">
+    <p class="painel-header-accordion__title">Dados da patologia</p>
+  </div>
+
+  <div class="grid-lg-12 painel-accordion">
+    <div class="painel-accordion__form">
+      <div class="grid-md-6 grid-lg-4 form-group-field" id="pathologyName">
+        <label class="form-group-field--label category-info">Nome da doença</label>
+        <input class="form-group-field--group__input" type="text" placeholder="Patologia"
+          [(ngModel)]="pathology.pathologyName">
+        <p class="text-title-error" *ngIf="errorPathology.pathologyName && pathology.pathologyName == ''">Campo
+          obrigatório</p>
+      </div>
+      <div class="grid-md-6 grid-lg-4 form-group-field" id="pathologyCalendarType">
+        <label class="form-group-field--label category-info">Tipo de calendário</label>
+        <app-single-select [desableSelect]="editPathology" [options]="options"
+          [valueSelected]="selectValueSelected(pathology.pathologyCalendarType)"
+          (optionSelected)="receiveOption($event);">
+        </app-single-select>
+        <p class="text-title-error"
+          *ngIf="errorPathology.pathologyCalendarType && pathology.pathologyCalendarType == ''">Campo obrigatório</p>
+      </div>
+    </div>
+  </div>
+</div>

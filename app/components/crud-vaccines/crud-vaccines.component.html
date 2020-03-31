@@ -1,0 +1,151 @@
+<div class="container-crud-vaccine">
+  <div class="d-flex align-center painel-header-accordion">
+    <p class="painel-header-accordion__title">Vacina</p>
+    <img (click)="finalizationModalClose()" class="painel-header-accordion__close" *ngIf="modal"
+      src="../../../assets/images/input/Cancelar.png">
+  </div>
+
+  <div class="m-b-50 grid-lg-12 painel-accordion">
+
+    <div class="painel-accordion__form">
+
+      <div class="grid-md-6 grid-lg-4 form-group-field">
+        <label class="form-group-field--label category-info" for="name-vaccine">Nome da vacina*</label>
+        <div class="form-group-field--group">
+
+          <app-typeahead [idInput]="'name-vaccine'"
+            [idBox]="idBoxTypeaHead ? (idBoxTypeaHead + 'name-vaccine') : 'name-vaccine'"
+            [placeholder]="'Pesquise por nome de vacina...'" [listElements]="listVaccine" [searchValue]="vaccine.name"
+            [blockInput]="blockVaccine" [error]="errorMsg" [requiredField]="true" [activeError]="activeError"
+            (returnValue)="selectVaccine($event)">
+          </app-typeahead>
+
+          <img *ngIf="vaccine.name.length > 1 && createVaccine && !modal"
+            src="../../../assets/images/input/Cancelar.png" (click)="removeVaccine()">
+        </div>
+      </div>
+
+      <div class="grid-md-6 grid-lg-4 form-group-field">
+        <label class="form-group-field--label category-info" for="contraIndications">Contraindicações</label>
+        <ng-container *ngFor="let item of vaccine.contraIndications; let i = index; trackBy:indexTracker">
+          <div class="form-group-field--group">
+            <input autocomplete="off" class="form-group-field--group__input" type="text" id="contraIndications{{i}}"
+              name="contraIndications" [(ngModel)]="vaccine.contraIndications[i]"
+              (keyup)="validAddFieldContraindication()">
+
+            <img *ngIf="vaccine.contraIndications.length > 1" src="../../../assets/images/input/Cancelar.png"
+              (click)="removeItemList(vaccine.contraIndications, i, type.contraindication )">
+          </div>
+        </ng-container>
+        <div class="form-group-field--add-new-field" (click)="newContraindication(); validAddFieldContraindication()"
+          [ngClass]="!addNewContraindication ? 'form-group-field--add-new-field--blocked' :  ''">+ Adicionar
+          contraindicação</div>
+      </div>
+
+      <div class="grid-md-6 grid-lg-4 form-group-field">
+        <label class="form-group-field--label category-info" for="Concomitance0">Não aplica concomitantemente
+          com:</label>
+
+        <ng-container *ngFor="let itemNotConcomitance of vaccine.notConcomitanceVaccines; let i = index">
+          <div class="form-group-field--group">
+
+            <app-typeahead [idInput]="'Concomitance' + i"
+              [idBox]="idBoxTypeaHead ? (idBoxTypeaHead + 'concomitance') : 'concomitance'"
+              [searchValue]="itemNotConcomitance.name" [placeholder]="'Pesquise por nome de vacina...'"
+              [listElements]="listVaccine" [blockInput]="itemNotConcomitance.name !== ''" [error]="'Vacina invalida'"
+              (returnValue)="selectConcomitace($event, i)" (keypress)="validAddFieldConcomitantly()">
+            </app-typeahead>
+
+            <img
+              *ngIf="vaccine.notConcomitanceVaccines.length >= 1 && vaccine.notConcomitanceVaccines[i].name.length > 0"
+              src="../../../assets/images/input/Cancelar.png"
+              (click)="removeItemList(vaccine.notConcomitanceVaccines, i, type.concomitance); removeItemList(vaccine.notConcomitanceVaccinesId, i, type.concomitance)">
+          </div>
+        </ng-container>
+
+        <div class="form-group-field--add-new-field" (click)="newConcomitantly(); validAddFieldConcomitantly()"
+          [ngClass]="!addNewConcomitantly ? 'form-group-field--add-new-field--blocked' :  ''">+ Adicionar vacina não
+          indicada</div>
+      </div>
+
+    </div>
+
+    <div class="painel-accordion__form">
+
+      <div class="grid-md-6 grid-lg-4 form-group-field">
+
+        <label class="form-group-field--label category-info">Necessário pedido médico?</label>
+
+        <label class="m-t-20 form-group-field--label-check text-category-info">Sim
+          <input class="form-group-field--label-check--input" type="radio" name="vaccine" [value]="true"
+            [(ngModel)]="vaccine.medicalOrderIsRequired">
+          <div class="form-group-field--label-check--circle">
+            <span class="check"></span>
+          </div>
+        </label>
+
+        <label class="m-t-20 form-group-field--label-check text-category-info">Não
+          <input class="form-group-field--label-check--input" type="radio" name="vaccine" [value]="false"
+            [(ngModel)]="vaccine.medicalOrderIsRequired">
+          <div class="form-group-field--label-check--circle">
+            <span class="check"></span>
+          </div>
+        </label>
+
+      </div>
+
+      <div class="grid-md-6 grid-lg-4 form-group-field">
+
+        <label class="form-group-field--label category-info" for="name-vaccine">Vacina de vírus vivo?</label>
+
+        <label class="m-t-20 form-group-field--label-check text-category-info">Sim
+          <input class="form-group-field--label-check--input" type="radio" name="virus" [value]="true"
+            [(ngModel)]="vaccine.isLiveVirus">
+          <div class="form-group-field--label-check--circle">
+            <span class="check"></span>
+          </div>
+        </label>
+
+        <label class="m-t-20 form-group-field--label-check text-category-info">Não
+          <input class="form-group-field--label-check--input" type="radio" name="virus" [value]="false"
+            [(ngModel)]="vaccine.isLiveVirus">
+          <div class="form-group-field--label-check--circle">
+            <span class="check"></span>
+          </div>
+        </label>
+
+      </div>
+
+    </div>
+
+    <div class="painel-accordion__form">
+
+      <div class="grid-md-6 grid-lg-4 form-group-field">
+        <label class="form-group-field--label category-info" for="obs">Observações <p class="text-aux">
+            ({{500 - vaccine.observations.length}}) </p>
+        </label>
+        <textarea class="form-group-field--textarea" id="obs" name="obs" [(ngModel)]="vaccine.observations"
+          maxlength="500"></textarea>
+      </div>
+
+      <div class="grid-md-6 grid-lg-4 form-group-field">
+        <label class="form-group-field--label category-info" for="recomendation">Recomendações para os pacientes <p
+            class="text-aux"> ({{500 - vaccine.recommendations.length}})</p>
+        </label>
+        <textarea class="form-group-field--textarea" id="recomendation" name="recomendation"
+          [(ngModel)]="vaccine.recommendations" maxlength="500"></textarea>
+      </div>
+
+    </div>
+
+    <div *ngIf="modal" class="painel-accordion__hr"></div>
+
+  </div>
+
+  <div [ngClass]="modal ? 'm-b-30' :  ''" class="container__group--nav__buttons text-align-right">
+    <button [ngClass]="modal ? 'm-r-30 m-b-30' :  ''" *ngIf="createVaccine" class="btn btn--add"
+      (click)="registerVaccine()">Cadastrar</button>
+    <button *ngIf="!createVaccine" class="btn btn--add" (click)="updateVaccine()">Salvar</button>
+  </div>
+
+</div>

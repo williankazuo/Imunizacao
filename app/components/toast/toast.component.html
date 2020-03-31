@@ -1,0 +1,6 @@
+<section [hidden]="!configToast.showToast" class="container-toast" id="container-toast">
+  <article class="container-toast__group d-flex align-center">
+    <p *ngIf="configToast.showToast"class="container-toast__group__message">{{configToast.textToast}}</p>
+    <hr class="container-toast__group__progress" id="myBar">
+  </article>
+</section>

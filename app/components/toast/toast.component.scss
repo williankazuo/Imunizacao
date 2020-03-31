@@ -1,0 +1,82 @@
+@import '../../../assets/scss/abstract/mixins';
+@import '../../../assets/scss/abstract/variables';
+
+@-webkit-keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+
+    to {
+        bottom: 50px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+
+    to {
+        bottom: 50px;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeout {
+    from {
+        bottom: 50px;
+        opacity: 1;
+    }
+
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        bottom: 50px;
+        opacity: 1;
+    }
+
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+
+.container-toast {
+    bottom: 50px;
+    @include align($vertical: false, $horizontal: true, $position: fixed);
+    -webkit-animation: fadein 0.8s, fadeout 0.8s 1.5s;
+    animation: fadein 0.8s, fadeout 0.8s 1.5s;
+
+    &__group {
+        background: $color-blue-bold;
+        max-width: 300px;
+        width: 300px;
+        min-height: 60px;
+        position: relative;
+        box-shadow: 0px 2px 7px 2px rgba(0, 0, 0, 0.55);
+
+        &__progress {
+            position: absolute;
+            bottom: 0;
+            height: 3px;
+            width: 0px;
+            border: none;
+            background: $color-blue;
+        }
+
+        &__message {
+            @include textFormater($color: $color-white);
+            margin-left: 20px;
+        }
+
+    }
+
+}

@@ -1,0 +1,30 @@
+@import '../../../assets/scss/abstract/mixins';
+@import '../../../assets/scss/abstract/variables';
+
+.container-crud-vaccine {
+
+    .painel-accordion {
+
+        &__form {
+
+            display: block;
+            height: max-content;
+
+            .form-group-field {
+                padding-right: 60px;
+
+                @include rwd-max(767) {
+                    padding-right: 0px;
+                  }
+            }
+
+        }
+
+        &__hr {
+            margin-top: 30px;
+            margin-bottom: -30px;
+            @include hr($color-blue-bold, 1px);
+        }
+
+    }
+}

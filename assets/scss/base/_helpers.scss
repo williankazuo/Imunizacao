@@ -1,0 +1,101 @@
+/* 
+    Arquivo para prover acesso rápido a recursos uteis de CSS
+*/
+
+/* #region ####################### FLEX BOX ################################ */
+
+.d-flex {
+  display: flex !important;
+}
+
+.d-inline-flex {
+  display: inline-flex !important;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.justify-content-end {
+  justify-content: flex-end;
+}
+
+.justify-content-start {
+  justify-content: flex-start;
+}
+
+.justify-content-space-between {
+  justify-content: space-between;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.base-line {
+  align-items: baseline;
+}
+
+/* #endregion */
+
+.text-align-left {
+  text-align: left;
+}
+
+.text-align-right {
+  text-align: right;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+// margin
+@for $i from 0 through 60 {
+  .m-l-#{$i} {
+    margin-left: #{$i}px !important;
+  }
+
+  .m-t-#{$i} {
+    margin-top: #{$i}px !important;
+  }
+
+  .m-r-#{$i} {
+    margin-right: #{$i}px !important;
+  }
+
+  .m-b-#{$i} {
+    margin-bottom: #{$i}px !important;
+  }
+
+  .m-a-#{$i} {
+    margin: #{$i}px !important;
+  }
+}
+
+// padding
+@for $i from 0 through 70 {
+  .p-l-#{$i} {
+    padding-left: #{$i}px !important;
+  }
+
+  .p-t-#{$i} {
+    padding-top: #{$i}px !important;
+  }
+
+  .p-r-#{$i} {
+    padding-right: #{$i}px !important;
+  }
+
+  .p-b-#{$i} {
+    padding-bottom: #{$i}px !important;
+  }
+
+  .p-a-#{$i} {
+    padding: #{$i}px !important;
+  }
+}

@@ -1,0 +1,11 @@
+@import '../../../assets/scss/abstract/variables';
+
+.container__group--data__excel {
+    display: block;
+    text-align: right;
+    border-top: 1px solid $color-blue-bold;
+}
+
+.painel-accordion__data__element {
+    min-height: 55px;
+}

@@ -1,0 +1,25 @@
+@import '../../../assets/scss/abstract/mixins';
+@import '../../../assets/scss/abstract/variables';
+
+.container-finalization {
+
+  padding: 50px 30px;
+  width: 100%;
+  background: $color-white;
+
+  &__group {
+
+    &--img {
+      img {
+        position: inherit;
+      }
+    }
+
+    &--title {
+
+      &__text {
+        @include textFormater(0px, $font-family-nunito, 32px, $color-blue-bold);
+      }
+    }
+  }
+}

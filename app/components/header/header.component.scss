@@ -1,0 +1,142 @@
+@import '../../../assets/scss/main.scss';
+@import '../../../assets/scss/abstract/mixins';
+
+.header {
+    background: $color-blue-bold;
+    height: 80px;
+    width: 100%;
+
+    &__group {
+        height: 100%;
+
+        &__element {
+            &--logo-system {
+                padding: 24px 60px;
+
+                @include lg-max() {
+                    padding: 24px 30px;
+                }
+
+                &--desk {
+                    display: inline-block;
+                }
+
+                &--mobile {
+                    display: none;
+                }
+
+                img {
+                    width: 100%;
+                }
+
+            }
+
+            &--menu {
+                @include lg-max() {
+                    width: 100%;
+                }
+
+                @include xl-max() {
+                    padding: 0 15px 0 0;
+                }
+
+                &__list {
+                    height: 100%;
+                    width: 100%;
+
+                    &__item {
+                        height: 80px;
+                        width: 155px;
+
+                        @include rwd-max(1100) {
+                            width: 130px;
+                        }
+
+                        &--selected {
+                            background-color: $color-white-transparent;
+                            @include hr($color-white, 6px);
+                        }
+
+                        &--title {
+                            @include textCustom($font-family-lato, 18px, $color-white, true);
+                        }
+                    }
+                }
+            }
+
+            &--logout {
+                padding: 24px 16px 24px 0px;
+
+                &__text {
+                    @include textCustom($font-family-nunito, 14px, $color-white);
+                }
+            }
+        }
+    }
+}
+
+@include lg-max () {
+    .header {
+        height: 105px;
+
+        &__group {
+            flex-flow: wrap;
+            justify-content: center;
+
+            &__element {
+                &--logo-system {
+                    width: 100%;
+                    justify-content: center;
+                    padding: 15px 30px 8px;
+                    height: 61px;
+
+                    &--desk {
+                        width: 50% !important;
+                    }
+
+                    @include md-max() {
+                        &--desk {
+                            display: none;
+                        }
+
+                        &--mobile {
+                            display: inline-block;
+                        }
+                    }
+
+                    img {
+                        width: auto;
+                    }
+                }
+
+                &--menu {
+                    height: 45px;
+
+                    &__list {
+                        &__item {
+                            height: 45px;
+                            width: 164px;
+
+                            &--title {
+                                font-size: 14px;
+                            }
+                        }
+                    }
+                }
+
+                &--logout {
+                    padding: 0 16px;
+                    position: absolute;
+                    right: 0;
+                    top: 15px;
+
+                    &__text {
+                        @include sm-max() {
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
